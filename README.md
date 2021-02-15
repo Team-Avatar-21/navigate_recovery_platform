@@ -2,7 +2,7 @@
 	* Lead Programmer
 	* Core Architecture
  
- * **Tyree King ** :turtle::man_farmer::latin_cross::
+ * **Tyree King** 👑 🤴 
 	* Data modeler
 	* Documentation lead
  
