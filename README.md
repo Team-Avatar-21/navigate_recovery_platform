@@ -9,5 +9,9 @@
 * **Bryan Dao**
 	* Testing Lead
 	* Client Liaison
+	
+* **Kevin Kim**
+	* UI/UX Design
+	* Team Manaager
 
 	
