@@ -10,7 +10,7 @@
 	* Testing Lead
 	* Client Liaison
 	
-* **Kevin Kim**
+* **Kevin Kim**🍕🍙
 	* UI/UX Design
 	* Team Manaager
 
