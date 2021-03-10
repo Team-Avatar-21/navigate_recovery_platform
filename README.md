@@ -14,7 +14,7 @@ addictions.
 	* Data modeler
 	* Documentation lead
 
-* **Bryan Dao**
+* **Bryan Dao** :four_leaf_clover: :goat:
 	* Testing Lead
 	* Client Liaison
 	
