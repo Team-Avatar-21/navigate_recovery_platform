@@ -17,6 +17,12 @@
   },
   "homepage": "https://github.com/Team-Avatar-21/navigate_recovery_platform#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "axios": "^0.21.1",
+    "express": "^4.17.1",
+    "firebase": "^8.3.0",
+    "firebase-admin": "^9.5.0",
+    "next": "^10.0.8",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
   }
 }
