@@ -9,7 +9,8 @@ export default (req, res) => {
       credential: admin.credential.cert(account),
     });
   }
-  const { email, password, displayName } = req.body;
+  const { email, password, displayName } = req.body; // req.body = {email:value, password:value, displayName:value}
+
   let uid = null;
   admin
     .auth()
@@ -32,9 +33,7 @@ export default (req, res) => {
         coach: true,
         peer: true,
       };
-      let claimsReturn = await admin
-        .auth()
-        .setCustomUserClaims(uid, customClaims);
+      await admin.auth().setCustomUserClaims(uid, customClaims);
       // console.log(claimsReturn);/
       let updatedRecord = await admin.auth().getUserByEmail(email);
       res.send(updatedRecord);

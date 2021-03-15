@@ -20,7 +20,7 @@ export default function Navbar() {
         </>
       ) : (
         <>
-          <Link href="/auth/signup">Signup</Link>
+          {/* <Link href="/auth/signup">Signup</Link> */}
           <Link href="/auth/signin">Signin</Link>
         </>
       )}

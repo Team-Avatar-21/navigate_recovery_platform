@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useDebugValue, useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useAuth } from "../../utils/auth";
@@ -15,7 +15,7 @@ export default function SignIn() {
   };
 
   const onSubmit = (data) => {
-    const { email, password } = data;
+    const { email, password } = data; //{email:value,}
     const displayName = data.name;
     axios
       .post("/api/user/add_user", {
