@@ -4,3 +4,6 @@ node_modules/
 /.DS_Store
 node_modules
 navigate-recovery-platfom-firebase-adminsdk-r5iv4-ea3204fe8f.json
+.next/
+.env
+.env.local
