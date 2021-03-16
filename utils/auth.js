@@ -80,6 +80,7 @@ function useProvideAuth() {
 
       .then(() => {
         setUser(false);
+        setAuthState("out");
       });
   };
 
