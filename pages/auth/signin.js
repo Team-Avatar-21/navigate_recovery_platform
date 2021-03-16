@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useRouter } from "next/router";
 import axios from "axios";
 import { useAuth } from "../../utils/auth";
 import Navbar from "../../components/Navbar";
@@ -6,7 +7,10 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import FormControl from "@material-ui/core/FormControl";
 import { useForm, FormProvider } from "react-hook-form";
+import { Alert, AlertTitle } from "@material-ui/lab";
 import {
+  CircularProgress,
+  Snackbar,
   Button,
   withStyles,
   Paper,
@@ -44,14 +48,35 @@ const styles = (theme) => ({
     maxWidth: "100px",
   },
 });
+
 function SignIn({ classes }) {
+  const router = useRouter();
   const auth = useAuth();
+  const [errorSnack, setErrorSnack] = useState({ open: false, message: "" });
+  const [awaitingResponse, setAwaitingResponse] = useState(false);
+  const handleOpenError = (err) => {
+    console.log("inside handle error");
+    setErrorSnack({ open: true, message: err.message });
+  };
+  const handleCloseError = () => {
+    setErrorSnack({ oepn: false, message: "" });
+  };
   const methods = useForm();
   const { handleSubmit } = methods;
   const onSubmit = (data) => {
     const { email, password } = data;
-    console.log(data);
-    auth.signin(email, password);
+    setAwaitingResponse(true);
+    auth
+      .signin(email, password)
+      .then((user) => {
+        setAwaitingResponse(false);
+        router.push("/");
+      })
+      .catch((err) => {
+        console.log(err);
+        setAwaitingResponse(false);
+        handleOpenError(err);
+      });
   };
   return (
     <>
@@ -64,7 +89,12 @@ function SignIn({ classes }) {
             variant="outlined"
           >
             <Typography variant="h3" align="center" gutterBottom>
-              Sign In
+              Sign In{" "}
+              {awaitingResponse ? (
+                <CircularProgress color="primary" size="0.8em" />
+              ) : (
+                "    "
+              )}
             </Typography>
             <FormProvider {...methods}>
               <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
@@ -111,7 +141,7 @@ function SignIn({ classes }) {
                       variant="contained"
                       color="secondary"
                     >
-                      Sign In
+                      Sign In{" "}
                     </Button>
                   </Grid>
                 </FormControl>
@@ -120,6 +150,17 @@ function SignIn({ classes }) {
           </StyledPaper>
         </Grid>
       </Grid>
+      <Snackbar
+        open={errorSnack.open}
+        autoHideDuration={6000}
+        onClose={handleCloseError}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert onClose={handleCloseError} severity="error">
+          <AlertTitle>Error</AlertTitle>
+          {errorSnack.message}
+        </Alert>
+      </Snackbar>
     </>
   );
 }
