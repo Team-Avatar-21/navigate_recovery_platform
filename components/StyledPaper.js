@@ -8,8 +8,10 @@ import { Button, withStyles, Fab } from "@material-ui/core";
 const useStyles = makeStyles((theme) => ({
   paper: {
     borderColor: theme.palette.secondary.light,
-    borderWidth: "0.01px",
-    borderStyle: "solid",
+    boxShadow: `0px 0px 5px ${theme.palette.secondary.main}`,
+    padding: "25px",
+    flexGrow: 1,
+    margin: "10px",
   },
 }));
 

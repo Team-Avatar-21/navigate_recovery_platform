@@ -1,22 +1,50 @@
 import { useDebugValue, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import axios from "axios";
 import { useAuth } from "../../utils/auth";
 import Navbar from "../../components/Navbar";
+import FormInput from "../../components/FormInput";
+import StyledPaper from "../../components/StyledPaper";
+import { Alert, AlertTitle } from "@material-ui/lab";
+import {
+  Typography,
+  FormControl,
+  Grid,
+  Button,
+  CircularProgress,
+  Snackbar,
+} from "@material-ui/core";
 
 export default function SignIn() {
   const auth = useAuth();
   const admin = auth?.authState?.tokenResult?.claims?.admin;
   const [successMessage, setSuccessMessage] = useState(false);
-  const { register, handleSubmit, reset } = useForm();
-  const showSuccessMessage = () => {
-    setSuccessMessage(true);
-    setTimeout(() => setSuccessMessage(false), 3000);
+  const [awaitingResponse, setAwaitingResponse] = useState(false);
+  const [errorSnack, setErrorSnack] = useState({ open: false, message: "" });
+  const [successSnack, setSuccessSnack] = useState({
+    open: false,
+    message: "",
+  });
+  const methods = useForm();
+  const { register, handleSubmit, reset } = methods;
+  const showSuccessMessage = (data) => {
+    console.log("inside success");
+    setSuccessSnack({ open: true, message: data.message });
+  };
+  const handleCloseSuccess = () => {
+    setSuccessSnack({ open: false, message: "" });
+  };
+  const handleOpenError = (err) => {
+    setErrorSnack({ open: true, message: err.message });
+  };
+  const handleCloseError = () => {
+    setErrorSnack({ oepn: false, message: "" });
   };
 
   const onSubmit = (data) => {
     const { email, password } = data; //{email:value,}
     const displayName = data.name;
+    setAwaitingResponse(true);
     axios
       .post("/api/user/add_user", {
         email,
@@ -25,12 +53,13 @@ export default function SignIn() {
         token: auth.authState.tokenResult.token,
       })
       .then((res) => {
-        console.log(res);
-        showSuccessMessage();
+        showSuccessMessage({ message: "User was successfully created" });
+        setAwaitingResponse(false);
         reset();
       })
       .catch((err) => {
-        console.log(err);
+        handleOpenError(err.response.data);
+        setAwaitingResponse(false);
       });
   };
   if (!admin) {
@@ -39,26 +68,89 @@ export default function SignIn() {
   return (
     <>
       <Navbar />
-      <h2>Add users</h2>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          <label htmlFor="name">Name</label>
-          <input type="name" name="name" id="name" ref={register} />
-          <br />
-        </div>
-        <div>
-          <label htmlFor="email">Email</label>
-          <input type="email" name="email" id="email" ref={register} />
-          <br />
-        </div>
-        <div>
-          <label htmlFor="password">Password</label>
-          <input type="password" name="password" id="password" ref={register} />
-          <br />
-        </div>
-        <button type="submit">Submit</button>
-        {successMessage ? <p>Success</p> : ""}
-      </form>
+      <Grid container justify="center">
+        <Grid item md={6} xs={10}>
+          <StyledPaper>
+            <Typography align="center" variant="h2">
+              Add users{" "}
+              {awaitingResponse ? (
+                <CircularProgress color="primary" size="0.8em" />
+              ) : (
+                "    "
+              )}
+            </Typography>
+            <FormProvider {...methods}>
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <Grid container direction="column">
+                  <FormControl margin="normal">
+                    <FormInput
+                      required
+                      autoComplete="off"
+                      type="name"
+                      name="name"
+                      label="name"
+                      id="name"
+                    />
+                  </FormControl>
+                  <FormControl margin="normal">
+                    <FormInput
+                      required
+                      autoComplete="off"
+                      type="email"
+                      name="email"
+                      label="email"
+                      id="email"
+                    />
+                  </FormControl>
+                  <FormControl margin="normal">
+                    <FormInput
+                      autoComplete="off"
+                      type="password"
+                      name="password"
+                      label="password"
+                      id="password"
+                      required
+                    />
+                  </FormControl>
+                  <FormControl margin="normal">
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      color="secondary"
+                      size="large"
+                    >
+                      Submit
+                    </Button>
+                    {successMessage ? <p>Success</p> : ""}
+                  </FormControl>
+                </Grid>
+              </form>
+            </FormProvider>
+          </StyledPaper>
+        </Grid>
+      </Grid>
+      <Snackbar
+        open={errorSnack.open}
+        autoHideDuration={6000}
+        onClose={handleCloseError}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert onClose={handleCloseError} severity="error">
+          <AlertTitle>Error</AlertTitle>
+          {errorSnack.message}
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={successSnack.open}
+        autoHideDuration={6000}
+        onClose={handleCloseSuccess}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert onClose={handleCloseSuccess} severity="success">
+          <AlertTitle>Success</AlertTitle>
+          {successSnack.message}
+        </Alert>
+      </Snackbar>
     </>
   );
 }
