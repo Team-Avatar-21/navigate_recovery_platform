@@ -4,12 +4,29 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "next"
+    "dev": "nodemon index",
+    "build": "next build",
+    "start": "node index",
+    "test": "mocha || true"
+  },
+  "devDependencies": {
+    "chai": "^4.3.3",
+    "mocha": "^8.3.1",
+    "nodemon": "^2.0.7"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "graphql": "^15.5.0",
+    "moment": "^2.29.1"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Team-Avatar-21/navigate_recovery_platform.git"
   },
+  "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
@@ -28,4 +45,5 @@
     "react-dom": "^17.0.1",
     "react-hook-form": "^6.15.4"
   }
+
 }

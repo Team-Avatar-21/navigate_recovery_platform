@@ -19,7 +19,7 @@ export default function StyledPaper({ children, className }) {
   const classes = useStyles();
   return (
     <Paper
-      elecation={0}
+      elevation={0}
       className={`${classes.paper} ${className}`}
       children={children}
     />
