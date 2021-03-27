@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon index",
+    "dev": "next",
+    "dev_demon": "nodemon index",
     "build": "next build",
     "start": "node index",
     "test": "mocha || true"
@@ -45,5 +46,4 @@
     "react-dom": "^17.0.1",
     "react-hook-form": "^6.15.4"
   }
-
 }
