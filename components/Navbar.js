@@ -17,6 +17,7 @@ export default function Navbar() {
         <>
           <button onClick={() => auth.signout()}>Logout</button>
           <span>{auth.user.email}</span>{" "}
+          <Link href="/resources">Resources</Link>
         </>
       ) : (
         <>
