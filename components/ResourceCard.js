@@ -11,13 +11,15 @@ const useStyles = makeStyles((theme) => {
   };
 });
 
-export default function ResourceCard({ data }) {
+export default function ResourceCard({ resources, attrs }) {
   const classes = useStyles();
 
-  const cardData = Object.keys(data).map((key) => {
+  const cardData = Object.keys(resources).map((key) => {
+    const attribute_name = attrs[key];
+    console.log(attrs);
     return (
       <Typography>
-        {key}: {data[key]}
+        {attribute_name}: {resources[key]}
       </Typography>
     );
   });

@@ -21,11 +21,12 @@ const GET_RESOURCES = (attributes) => {
   return query;
 };
 
-export default function ResourcesComp({ attrs: attributes }) {
+export default function ResourcesComp({ attrs: attributes_obj_arr }) {
   const auth = useAuth();
   const [resources, setResource] = useState([]);
 
   const handleFetchRes = async () => {
+    const attributes = attributes_obj_arr.map((obj) => obj.attribute_name);
     const d = await fetch(
       GET_RESOURCES(attributes),
       auth.authState.tokenResult.token
@@ -33,10 +34,19 @@ export default function ResourcesComp({ attrs: attributes }) {
     setResource(d.Resources);
     console.log(d.Resources);
   };
+  const attrs_names = () => {
+    const names_obj = {};
+    attributes_obj_arr.forEach((obj) => {
+      const key = obj.attribute_name;
+      const value = obj.filter_name;
+      names_obj[key] = value;
+    });
+    return names_obj;
+  };
   const resComp = resources.map((resource, idx) => {
     return (
       <Grid item key={idx}>
-        <ResourceCard data={resource} />
+        <ResourceCard resources={resource} attrs={attrs_names()} />
       </Grid>
     );
   });

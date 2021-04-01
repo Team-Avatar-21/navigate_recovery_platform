@@ -67,7 +67,17 @@ export default function Resources() {
     );
     setFiltersState(fs);
 
-    setAttributes(fs.map((filter) => filter.attribute_name));
+    setAttributes(
+      fs.map((filter) => {
+        const { attribute_name, filter_name } = filter;
+        const obj = {
+          attribute_name: attribute_name,
+          filter_name: filter_name,
+        };
+        obj[attribute_name] = filter_name;
+        return obj;
+      })
+    );
     return fs;
   };
   const { data, error } = useSWR(GET_ALL_FILTERS, getData);
