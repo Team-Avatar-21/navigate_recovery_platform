@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext, createContext } from "react";
+import { CircularProgress, Grid } from "@material-ui/core";
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 import firebase from "firebase/app";
 
@@ -8,7 +9,6 @@ import axios from "axios";
 // Add your Firebase credentials
 
 if (firebase.apps.length == 0) {
-  console.log(process.env);
   firebase.initializeApp({
     apiKey: API_KEY,
     authDomain: "navigate-recovery-platfom.firebaseapp.com",
@@ -25,7 +25,13 @@ const authContext = createContext();
 
 export function ProvideAuth({ children }) {
   const auth = useProvideAuth();
-
+  if (auth.authState.status === "loading") {
+    return (
+      <Grid container direction="row" justify="center" alignItems="center">
+        <CircularProgress />
+      </Grid>
+    );
+  }
   return <authContext.Provider value={auth}>{children}</authContext.Provider>;
 }
 
