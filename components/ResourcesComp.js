@@ -78,11 +78,11 @@ export default function ResourcesComp({
   };
 
   const buildResourcesComp = (resources) => {
-    console.log("inside build resources");
-    console.log(resources);
+    // console.log("inside build resources");
+    // console.log(resources);
     return resources.map((resource, idx) => {
-      console.log("inside build resources");
-      console.log(resource);
+      // console.log("inside build resources");
+      // console.log(resource);
       return (
         <Grid item key={idx}>
           <ResourceCard resources={resource} attrs={attrs_names()} />
@@ -94,7 +94,7 @@ export default function ResourcesComp({
   //creates an array of resource cards
 
   let resComp = buildResourcesComp(resources);
-  console.log(resComp);
+  // console.log(resComp);
   if (!resources.length && isFetched) {
     resComp = <Grid item>No Resources</Grid>;
   }
@@ -106,7 +106,7 @@ export default function ResourcesComp({
       auth.authState.tokenResult.token
     )
       .then((de) => {
-        console.log(de);
+        // console.log(de);
         setResources(de.Resources);
       })
       .catch((err) => {

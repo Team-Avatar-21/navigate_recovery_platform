@@ -10,7 +10,8 @@ export default function Navbar() {
       style={{
         display: "flex",
         justifyContent: "space-between",
-        width: "25%",
+        minWidth: "25%",
+        maxWidth: "50%",
       }}
     >
       {auth?.user ? (
@@ -25,7 +26,7 @@ export default function Navbar() {
           <Link href="/auth/signin">Signin</Link>
         </>
       )}
-      {admin ? <Link href="/admin/add_users">Add Users</Link> : ""}
+      {admin ? <Link href="/admin">Admin</Link> : ""}
       <Link href="/"> Main</Link>
     </div>
   );

@@ -62,7 +62,6 @@ export default function Filters({ data, setFiltersState }) {
           value: option.filter_option,
           label: option.filter_option,
         }));
-
         return (
           <FormControl className={classes.formControl} key={idx}>
             <InputLabel>{filter_name}</InputLabel>
@@ -84,6 +83,9 @@ export default function Filters({ data, setFiltersState }) {
                         </MenuItem>
                       );
                     })}
+                    <MenuItem name={"none"} value={""}>
+                      None
+                    </MenuItem>
                   </Select>
                 }
               />
