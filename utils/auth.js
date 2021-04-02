@@ -132,6 +132,8 @@ function useProvideAuth() {
         if (true) {
           setAuthState({ status: "in", user, tokenResult, user_id: user.uid });
         }
+      } else {
+        setAuthState({ status: "out" });
       }
     });
     const unsubscribe = firebase.auth().onAuthStateChanged((user) => {

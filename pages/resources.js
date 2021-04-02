@@ -17,6 +17,8 @@ import fetch from "../utils/fetch";
 import { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import ResourcesComp from "../components/ResourcesComp";
+import Filters from "../components/Filters";
+import { createContext, useContext } from "react";
 
 const GET_ALL_FILTERS = {
   query: `query AllFilters {
@@ -30,15 +32,31 @@ const GET_ALL_FILTERS = {
     }
   }`,
 };
-
-const GET_RESOURCES = {
-  query: `query AllFilters {
-    Resources {
-      City
-      organizationName
-    }
-  }`,
+const GET_FILTERED_RESOURCES = (attributes, filters) => {
+  if (!filters) return filters;
+  let attrs = parseAttrsForGraphQL(attributes);
+  let where = "";
+  Object.keys(filters).forEach((filter) => {
+    if (filters[filter]) where += `{${filter}: {_eq: "${filters[filter]}"},}`;
+  });
+  const query = {
+    query: `query GET_FILTERED_RESOURCES{
+      Resources(where:${where}){
+        ${attrs}
+      }
+    }`,
+  };
+  return query;
 };
+
+const parseAttrsForGraphQL = (attributes) => {
+  let attrs = "";
+  attributes.forEach((element) => {
+    attrs += element + "\n";
+  });
+  return attrs;
+};
+
 const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1),
@@ -55,17 +73,16 @@ const useStyles = makeStyles((theme) => ({
 export default function Resources() {
   const classes = useStyles();
   const auth = useAuth();
-  const [city, setCity] = useState("");
   const [filtersState, setFiltersState] = useState({});
   const [attributes, setAttributes] = useState([]);
-  // const [getRes, setGetRes] = useState(false);
+  const [filteredRes, setFilteredRes] = useState([]);
 
   const getData = async (...args) => {
     const { Filters_Names: fs } = await fetch(
       GET_ALL_FILTERS,
       auth.authState.tokenResult.token
     );
-    setFiltersState(fs);
+    // setFiltersState(fs);
 
     setAttributes(
       fs.map((filter) => {
@@ -85,34 +102,25 @@ export default function Resources() {
   if (!auth.user) {
     return "access deined";
   }
-  const filters = data
-    ? data?.map((filter, idx) => {
-        const { filter_name, attribute_name } = filter;
-        const options = filter.filters || [];
-        const { filter_type } = options.length > 0 ? options[0] : "";
-        return (
-          <FormControl className={classes.formControl} key={idx}>
-            <InputLabel>{filter_name}</InputLabel>
-            {filter_type == "SELECT" ? (
-              <Select value={city}>
-                {options.map((option, idx) => {
-                  const value = option.filter_option;
-                  return (
-                    <MenuItem name={attribute_name} key={idx} value={value}>
-                      {value}
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            ) : (
-              <Select value="none">
-                <MenuItem value={"none"}>None</MenuItem>
-              </Select>
-            )}
-          </FormControl>
-        );
-      })
-    : [];
+  const handleSetFilters = (data) => {
+    setFiltersState(data);
+    // const attrs = attributes.map((obj) => obj.attribute_name);
+    // const d = await fetch(
+    //   GET_FILTERED_RESOURCES(attrs, filtersState),
+    //   auth.authState.tokenResult.token
+    // );
+    // console.log(d);
+    // setFilteredRes(d.Resources);
+  };
+  // const handleFetchFilteredRes = async () => {
+  //   const attributes = attributes_obj_arr.map((obj) => obj.attribute_name);
+  //   const d = await fetch(
+  //     GET_FILTERED_RESOURCES(attributes, filters),
+  //     auth.authState.tokenResult.token
+  //   );
+  //   console.log(d);
+  //   setResources(d.Resources);
+  // };
   return (
     <Box className={classes.layout}>
       <Navbar />
@@ -121,21 +129,14 @@ export default function Resources() {
           <Typography>Filters:</Typography>
         </Grid>
         <Grid item>
-          <Grid
-            container
-            as="form"
-            spacing={2}
-            style={{ display: "flex", flexWrap: "wrap" }}
-          >
-            {filters.map((filter, idx) => (
-              <Grid key={idx} item>
-                {filter}
-              </Grid>
-            ))}
-          </Grid>
+          <Filters data={data} setFiltersState={handleSetFilters} />
         </Grid>
         <Grid item>
-          <ResourcesComp attrs={attributes} />
+          <ResourcesComp
+            attrs={attributes}
+            filters={filtersState}
+            filteredRes={filteredRes}
+          />
         </Grid>
       </Grid>
     </Box>

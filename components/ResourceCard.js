@@ -16,10 +16,9 @@ export default function ResourceCard({ resources, attrs }) {
 
   const cardData = Object.keys(resources).map((key) => {
     const attribute_name = attrs[key];
-    console.log(attrs);
     return (
-      <Typography>
-        {attribute_name}: {resources[key]}
+      <Typography key={key}>
+        {attribute_name}: {String(resources[key])}
       </Typography>
     );
   });
