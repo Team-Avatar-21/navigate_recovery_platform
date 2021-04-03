@@ -12,6 +12,9 @@ import { useState, useContext } from "react";
 import { useForm, Controller } from "react-hook-form";
 import FormInput from "./FormInput";
 
+/**
+ * Component class that represents filters to filter through resources
+ */
 const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1),
@@ -41,6 +44,12 @@ export default function Filters({ data, setFiltersState }) {
   const [filterState, setFilterState] = useState(default_values());
   const classes = useStyles();
   const handleFetchFiltered = () => {};
+
+  /**
+   * Handles click on Get Filtered Resources button
+   * updates state of filters in the parent component
+   * @param {Object} data of the current form state
+   */
   const onSubmit = (data) => {
     setFiltersState(data);
   };
@@ -50,9 +59,10 @@ export default function Filters({ data, setFiltersState }) {
     reset(default_values());
   };
 
-  const handleChange2 = (e) => {
-    // console.log(getValues());
-  };
+  /**
+   * parses filters data with inromation about filter names,
+   * values to build filters
+   */
   const filters = data
     ? data?.map((filter, idx) => {
         const { filter_name, attribute_name } = filter;
@@ -71,10 +81,7 @@ export default function Filters({ data, setFiltersState }) {
                 control={control}
                 defaultValue=""
                 as={
-                  <Select
-                    defaultValue=""
-                    //    onClose={handleChange2}
-                  >
+                  <Select defaultValue="">
                     {options.map((option, idx) => {
                       const value = option.filter_option;
                       return (
@@ -90,25 +97,13 @@ export default function Filters({ data, setFiltersState }) {
                 }
               />
             ) : (
-              //   <Select inputRef={register} name={attribute_name} ref={register}>
-              //     {options.map((option, idx) => {
-              //       const value = option.filter_option;
-              //       return (
-              //         <MenuItem name={attribute_name} key={idx} value={value}>
-              //           {value}
-              //         </MenuItem>
-              //       );
-              //     })}
-              //   </Select>
-              //   <Select inputRef={register}>
-              //     <MenuItem value={"none"}>None</MenuItem>
-              //   </Select>
               ""
             )}
           </FormControl>
         );
       })
     : [];
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={2} style={{ display: "flex", flexWrap: "wrap" }}>

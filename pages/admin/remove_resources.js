@@ -22,6 +22,9 @@ import ResourceCard from "../../components/ResourceCard";
  * This Page shows logic and tools to remove resources from the DB.
  */
 
+/**
+ * needed to define all attributes of the resources in the db
+ */
 const GET_ALL_FILTERS = {
   query: `query AllFilters {
       Filters_Names {
@@ -50,8 +53,8 @@ const parseAttrsForGraphQL = (attributes) => {
 };
 
 /**
- * Composes a mutation string for GraphQL request
- * @param {Object} attributes <attribute_name>:<value> for a new resource
+ * Composes a mutation string for GraphQL request to remove a resource
+ * @param {String} orgName name of the org since it is a pk
  * @returns {String}
  */
 const REMOVE_RESOURCE = (orgName) => {
@@ -68,6 +71,11 @@ const REMOVE_RESOURCE = (orgName) => {
   return mutation;
 };
 
+/**
+ * Makes a query to fetch all resources
+ * @param {Array<Object>} attributes each attribute is an object
+ * @returns
+ */
 const GET_ALL_RESOURCES = (attributes) => {
   let attrs = parseAttrsForGraphQL(attributes);
   console.log(attrs);
@@ -113,9 +121,11 @@ export default function AddResources() {
   };
 
   /**
-   * Method to fetch initial attributes
+   * Method to fetch initial attributes and resources with the fetched attributes
+   * sets up attributes var
+   * sets up resources var
    * @param  {...any} args
-   * @returns
+   * @returns {void}
    */
   const getData = async (...args) => {
     const { Filters_Names: fs } = await fetch(
@@ -140,27 +150,14 @@ export default function AddResources() {
   };
   const { data, err } = useSWR(GET_ALL_FILTERS, getData);
 
-  /**
-   * handles add resource logic
-   * @param {Object} data from the registred fields of the form
-   */
-  const onSubmit = async (data) => {
-    setAwaitingResponse(true);
-    fetch(ADD_RESOURCE(data), auth.authState.tokenResult.token)
-      .then((res) => {
-        showSuccessMessage({ message: "Resource was successfully created" });
-        setAwaitingResponse(false);
-        reset();
-      })
-      .catch((err) => {
-        handleOpenError(err[0]);
-        setAwaitingResponse(false);
-      });
-  };
-
   if (!admin) {
     return <>Access Denied</>;
   }
+
+  /**
+   * helper method to prepare attributes object for resource cards component
+   * @returns {Object} with attribute names and appropriate values
+   */
   const attrs_names = () => {
     const names_obj = {};
     attributes.forEach((obj) => {
@@ -170,6 +167,12 @@ export default function AddResources() {
     });
     return names_obj;
   };
+
+  /**
+   *  Deletes a resource from DB
+   * displays success/failure message respectively
+   * @param {String} orgName pk of the resource to be deleted from DB
+   */
   const handleDelete = async (orgName) => {
     setAwaitingResponse(true);
     fetch(REMOVE_RESOURCE(orgName), auth.authState.tokenResult.token)
@@ -189,6 +192,12 @@ export default function AddResources() {
         setAwaitingResponse(false);
       });
   };
+
+  /**
+   * Helper method to build ResourceCard components for each resource
+   * @param {Array<Object>} resources
+   * @returns {Array<Grid>} grid components
+   */
   const buildResourcesComp = (resources) => {
     return resources.map((resource, idx) => {
       return (
@@ -216,6 +225,7 @@ export default function AddResources() {
           </>
         </Grid>
       </Grid>
+      {/* code below really just for success/failure messages */}
       <Snackbar
         open={errorSnack.open}
         autoHideDuration={6000}

@@ -2,6 +2,9 @@ import { Grid, Typography, Button, Card } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import DeleteIcon from "@material-ui/icons/Delete";
 
+/**
+ * Component class that represents a resource card
+ */
 const useStyles = makeStyles((theme) => {
   return {
     card: {
@@ -15,6 +18,10 @@ const useStyles = makeStyles((theme) => {
 export default function ResourceCard({ resources, attrs, onDelete }) {
   const classes = useStyles();
 
+  /**
+   * Prepares data for a resource card
+   * simply displays each attribute with appropriate value
+   */
   const cardData = Object.keys(resources).map((key) => {
     const attribute_name = attrs[key];
     return (
@@ -23,6 +30,7 @@ export default function ResourceCard({ resources, attrs, onDelete }) {
       </Typography>
     );
   });
+
   return (
     <Card className={classes.card}>
       {cardData}{" "}
