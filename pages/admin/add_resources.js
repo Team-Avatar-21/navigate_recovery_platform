@@ -16,7 +16,13 @@ import {
 } from "@material-ui/core";
 import fetch from "../../utils/fetch";
 import useSWR from "swr";
-import { urlObjectKeys } from "next/dist/next-server/lib/utils";
+
+/**
+ * This Page shows logic and tools to add resources to the DB.
+ * TODO: add new field to already exisitng ones.
+ * TODO: Cleanup, lot's of code copied from add_users.js
+ * TODO: add form validation
+ */
 
 const GET_ALL_FILTERS = {
   query: `query AllFilters {
@@ -30,6 +36,13 @@ const GET_ALL_FILTERS = {
       }
     }`,
 };
+
+/**
+ * Helper method that composes attributes in a shape needed for GraphQL query
+ * TODO: take this function out to a separate module
+ * @param {Array} attributes that need to be returned
+ * @returns {String}
+ */
 const parseAttrsForGraphQL = (attributes) => {
   let attrs = "";
   attributes.forEach((element) => {
@@ -38,6 +51,11 @@ const parseAttrsForGraphQL = (attributes) => {
   return attrs;
 };
 
+/**
+ * Composes a mutation string for GraphQL request
+ * @param {Object} attributes <attribute_name>:<value> for a new resource
+ * @returns {String}
+ */
 const ADD_RESOURCE = (attributes) => {
   //   let attrs = parseAttrsForGraphQL(attributes);
   let object = "";
@@ -52,16 +70,9 @@ const ADD_RESOURCE = (attributes) => {
       }
     `,
   };
-  //   console.log(query);
   return mutation;
 };
-`mutation ADD_RESOURCE {
-    insert_Resources_one(object: {City: "", organizationName: "", inPatient: false}) {
-      City
-      inPatient
-      organizationName
-    }
-  }`;
+
 export default function AddResources() {
   const auth = useAuth();
 
@@ -90,6 +101,11 @@ export default function AddResources() {
     setErrorSnack({ oepn: false, message: "" });
   };
 
+  /**
+   * Method to fetch initial attributes
+   * @param  {...any} args
+   * @returns
+   */
   const getData = async (...args) => {
     const { Filters_Names: fs } = await fetch(
       GET_ALL_FILTERS,
@@ -110,33 +126,28 @@ export default function AddResources() {
   };
   const { data, err } = useSWR(GET_ALL_FILTERS, getData);
 
+  /**
+   * handles add resource logic
+   * @param {Object} data from the registred fields of the form
+   */
   const onSubmit = async (data) => {
-    const d = await fetch(ADD_RESOURCE(data), auth.authState.tokenResult.token);
-
-    // const { email, password } = data; //{email:value,}
-    // const displayName = data.name;
-    // setAwaitingResponse(true);
-    // axios
-    //   .post("/api/user/add_user", {
-    //     email,
-    //     password,
-    //     displayName,
-    //     token: auth.authState.tokenResult.token,
-    //   })
-    //   .then((res) => {
-    //     showSuccessMessage({ message: "User was successfully created" });
-    //     setAwaitingResponse(false);
-    //     reset();
-    //   })
-    //   .catch((err) => {
-    //     handleOpenError(err.response.data);
-    //     setAwaitingResponse(false);
-    //   });
+    setAwaitingResponse(true);
+    fetch(ADD_RESOURCE(data), auth.authState.tokenResult.token)
+      .then((res) => {
+        showSuccessMessage({ message: "Resource was successfully created" });
+        setAwaitingResponse(false);
+        reset();
+      })
+      .catch((err) => {
+        handleOpenError(err[0]);
+        setAwaitingResponse(false);
+      });
   };
 
   if (!admin) {
     return <>Access Denied</>;
   }
+
   return (
     <>
       <Navbar />

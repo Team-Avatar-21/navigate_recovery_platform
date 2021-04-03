@@ -20,6 +20,14 @@ import ResourcesComp from "../components/ResourcesComp";
 import Filters from "../components/Filters";
 import { createContext, useContext } from "react";
 
+/**
+ * Displays page with resources and filters
+ */
+
+/**
+ * GraphQL query to fetch all filters with available options
+ * TODO: probably will have to rewrite schema to make it more efficient
+ */
 const GET_ALL_FILTERS = {
   query: `query AllFilters {
     Filters_Names {
@@ -32,6 +40,14 @@ const GET_ALL_FILTERS = {
     }
   }`,
 };
+
+/**
+ * Method that composes a GraphQL query  targeted to get resources based
+ * on filter values
+ * @param {Array} attributes array of attributes (names of attributes in the db) that need to be fetched.
+ * @param {Object} filters object with attribute_name:value to filter the attribute
+ * @returns {String} which represents GraphQL query to fetch resources based on filters provided.
+ */
 const GET_FILTERED_RESOURCES = (attributes, filters) => {
   if (!filters) return filters;
   let attrs = parseAttrsForGraphQL(attributes);
@@ -49,6 +65,11 @@ const GET_FILTERED_RESOURCES = (attributes, filters) => {
   return query;
 };
 
+/**
+ * Helper method that composes attributes in a shape needed for GraphQL query
+ * @param {Array} attributes that need to be returned
+ * @returns {String}
+ */
 const parseAttrsForGraphQL = (attributes) => {
   let attrs = "";
   attributes.forEach((element) => {
@@ -57,6 +78,9 @@ const parseAttrsForGraphQL = (attributes) => {
   return attrs;
 };
 
+/**
+ * Styling classes for Material UI components
+ */
 const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1),
@@ -77,6 +101,12 @@ export default function Resources() {
   const [attributes, setAttributes] = useState([]);
   const [filteredRes, setFilteredRes] = useState([]);
 
+  /**
+   * Method that fetches all filter values from the DB
+   * also sets attributes based of the filters
+   * @param  {...any} args not sure what this is here for, just keep it for now
+   * @returns {Object} response object from GraphQL endpoint
+   */
   const getData = async (...args) => {
     const { Filters_Names: fs } = await fetch(
       GET_ALL_FILTERS,
@@ -102,6 +132,7 @@ export default function Resources() {
   if (!auth.user) {
     return "access deined";
   }
+
   const handleSetFilters = (data) => {
     setFiltersState(data);
     // const attrs = attributes.map((obj) => obj.attribute_name);
@@ -121,6 +152,7 @@ export default function Resources() {
   //   console.log(d);
   //   setResources(d.Resources);
   // };
+
   return (
     <Box className={classes.layout}>
       <Navbar />
