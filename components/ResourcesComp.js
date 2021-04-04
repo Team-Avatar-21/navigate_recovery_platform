@@ -118,8 +118,7 @@ export default function ResourcesComp({
 
   return (
     <>
-      <Typography>Resources of NavRec</Typography>
-      <Grid container spacint={2}></Grid>
+
       <Button variant="contained" color="primary" onClick={handleFetchRes}>
         Get All Resources
       </Button>
@@ -127,5 +126,14 @@ export default function ResourcesComp({
         {resComp}
       </Grid>
     </>
+    /*<>
+      <Grid container spacint={2}></Grid>
+      <Button variant="contained" color="primary" onClick={handleFetchRes}>
+        Get All Resources
+      </Button>
+      <Grid container spacing={3}>
+        {resComp}
+      </Grid>
+    </>*/
   );
 }
