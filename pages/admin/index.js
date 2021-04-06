@@ -16,6 +16,9 @@ export default function AdminIndex() {
           <Link href="/admin/add_users">Add Users</Link>
         </li>
         <li>
+          <Link href="/admin/remove_users">Remove Users</Link>
+        </li>
+        <li>
           <Link href="/admin/add_resources">Add Resources</Link>
         </li>
         <li>
