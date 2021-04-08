@@ -1,6 +1,9 @@
 import { Grid, Typography, Button, Card } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import DeleteIcon from "@material-ui/icons/Delete";
+import { Block } from "@material-ui/icons";
+import CardActionArea from "@material-ui/core/CardActionArea";
+import { shadows } from "@material-ui/system";
 
 /**
  * Component class that represents a resource card
@@ -8,9 +11,19 @@ import DeleteIcon from "@material-ui/icons/Delete";
 const useStyles = makeStyles((theme) => {
   return {
     card: {
-      minWidth: " 150px",
-      minHeight: "150px",
-      padding: "10px",
+      background: "#f1f1f1",
+      "&:hover": {
+        background: "#FFFF66",
+      },
+      display: "block",
+      width: "25vw",
+      height: "10vw",
+    },
+
+    gridContainer: {
+      paddingTop: "45px",
+      paddingLeft: "60px",
+      paddingRight: "25px",
     },
   };
 });
@@ -32,13 +45,17 @@ export default function ResourceCard({ resources, attrs, onDelete }) {
   });
 
   return (
-    <Card className={classes.card}>
-      {cardData}{" "}
-      {onDelete ? (
-        <DeleteIcon onClick={() => onDelete(resources.organizationName)} />
-      ) : (
-        ""
-      )}
-    </Card>
+    <Grid container spacing={4} className={classes.gridContainer}>
+      <Grid item>
+        <Card className={classes.card} variant="outlined">
+          {cardData}
+          {onDelete ? (
+            <DeleteIcon onClick={() => onDelete(resources.organizationName)} />
+          ) : (
+            ""
+          )}
+        </Card>
+      </Grid>
+    </Grid>
   );
 }
