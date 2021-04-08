@@ -52,8 +52,7 @@ export default function Filters({ data, setFiltersState }) {
    * @param {Object} data of the current form state
    */
   const onSubmit = (data) => {
-    console.log(data);
-    // setFiltersState(data);
+    setFiltersState(data);
   };
 
   const resetFilters = () => {

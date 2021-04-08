@@ -20,8 +20,8 @@ const parseAttrsForGraphQL = (attributes) => {
 const GET_RESOURCES = (attributes) => {
   let attrs = parseAttrsForGraphQL(attributes);
   const query = {
-    query: `query AllFilters {
-      Resources {
+    query: `query GET_ALL_RESROUCES {
+      resources_new {
         ${attrs}
       }
     }`,
@@ -45,7 +45,7 @@ const GET_FILTERED_RESOURCES = (attributes, filters) => {
   });
   const query = {
     query: `query GET_FILTERED_RESOURCES{
-      Resources(where:{${where}}){
+      resources_new(where:{${where}}){
         ${attrs}
       }
     }`,
@@ -69,10 +69,11 @@ export default function ResourcesComp({
       GET_RESOURCES(attributes),
       auth.authState.tokenResult.token
     );
-    setResources(d.Resources);
+    console.log(d);
+    setResources(d.resources_new);
     setIsFetched(true);
   };
-
+  // console.log(attributes_obj_arr);
   /**
    * Helps to fetch resources from the db when filters state gets updated.
    */
@@ -121,7 +122,7 @@ export default function ResourcesComp({
     )
       .then((de) => {
         // console.log(de);
-        setResources(de.Resources);
+        setResources(de.resources_new);
       })
       .catch((err) => {
         console.log(err);

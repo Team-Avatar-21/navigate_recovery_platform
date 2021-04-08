@@ -116,20 +116,25 @@ export default function Resources() {
     // setFiltersState(fs);
 
     console.log(fs);
-    // setAttributes(
-    //   fs.map((filter) => {
-    //     const { attribute_name, filter_name } = filter;
-    //     const obj = {
-    //       attribute_name: attribute_name,
-    //       filter_name: filter_name,
-    //     };
-    //     obj[attribute_name] = filter_name;
-    //     return obj;
-    //   })
-    // );
+    setAttributes(
+      fs.map((filter) => {
+        const {
+          filter_name: attribute_name,
+          filter_human_name: filter_name,
+        } = filter;
+        const obj = {
+          attribute_name: attribute_name,
+          filter_name: filter_name,
+        };
+        obj[attribute_name] = filter_name;
+        return obj;
+      })
+    );
     return fs;
   };
-  const { data, error, isValidating } = useSWR(GET_ALL_FILTERS, getData);
+  const { data, error, isValidating } = useSWR(GET_ALL_FILTERS, getData, {
+    revalidateOnFocus: false,
+  });
 
   if (!auth.user) {
     return "access deined";
@@ -169,11 +174,11 @@ export default function Resources() {
           <Filters data={data} setFiltersState={handleSetFilters} />
         </Grid>
         <Grid item>
-          {/* <ResourcesComp
+          <ResourcesComp
             attrs={attributes}
             filters={filtersState}
             filteredRes={filteredRes}
-          /> */}
+          />
         </Grid>
       </Grid>
     </Box>
