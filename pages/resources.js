@@ -29,13 +29,14 @@ import { createContext, useContext } from "react";
  * TODO: probably will have to rewrite schema to make it more efficient
  */
 const GET_ALL_FILTERS = {
-  query: `query AllFilters {
-    Filters_Names {
-      attribute_name
+  query: `query GET_ALL_FILTERS {
+    filters_new {
+      filter_human_name
       filter_name
-      filters {
-        filter_option
-        filter_type
+      filter_type
+      important
+      filter_options {
+        option_value
       }
     }
   }`,
@@ -108,29 +109,33 @@ export default function Resources() {
    * @returns {Object} response object from GraphQL endpoint
    */
   const getData = async (...args) => {
-    const { Filters_Names: fs } = await fetch(
+    const { filters_new: fs } = await fetch(
       GET_ALL_FILTERS,
       auth.authState.tokenResult.token
     );
     // setFiltersState(fs);
 
-    setAttributes(
-      fs.map((filter) => {
-        const { attribute_name, filter_name } = filter;
-        const obj = {
-          attribute_name: attribute_name,
-          filter_name: filter_name,
-        };
-        obj[attribute_name] = filter_name;
-        return obj;
-      })
-    );
+    console.log(fs);
+    // setAttributes(
+    //   fs.map((filter) => {
+    //     const { attribute_name, filter_name } = filter;
+    //     const obj = {
+    //       attribute_name: attribute_name,
+    //       filter_name: filter_name,
+    //     };
+    //     obj[attribute_name] = filter_name;
+    //     return obj;
+    //   })
+    // );
     return fs;
   };
-  const { data, error } = useSWR(GET_ALL_FILTERS, getData);
+  const { data, error, isValidating } = useSWR(GET_ALL_FILTERS, getData);
 
   if (!auth.user) {
     return "access deined";
+  }
+  if (isValidating) {
+    return "loading...";
   }
 
   const handleSetFilters = (data) => {
@@ -164,11 +169,11 @@ export default function Resources() {
           <Filters data={data} setFiltersState={handleSetFilters} />
         </Grid>
         <Grid item>
-          <ResourcesComp
+          {/* <ResourcesComp
             attrs={attributes}
             filters={filtersState}
             filteredRes={filteredRes}
-          />
+          /> */}
         </Grid>
       </Grid>
     </Box>
