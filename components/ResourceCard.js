@@ -37,14 +37,13 @@ export default function ResourceCard({ resources, attrs, onDelete, onEdit }) {
    * simply displays each attribute with appropriate value
    */
   const cardData = Object.keys(resources).map((key) => {
-    const attribute_name = attrs[key];
+    const attribute_name = attrs[key]["name"];
     return (
       <Typography key={key}>
         {attribute_name}: {String(resources[key])}
       </Typography>
     );
   });
-
   return (
     <Grid container spacing={4} className={classes.gridContainer}>
       <Grid item>

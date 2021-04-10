@@ -172,6 +172,7 @@ export default function Resources() {
         </Grid>
         <Grid item>
           <ResourcesComp
+            attrs_data={data}
             attrs={attributes}
             filters={filtersState}
             filteredRes={filteredRes}

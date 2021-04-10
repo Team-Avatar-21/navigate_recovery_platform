@@ -9,6 +9,7 @@ import {
 } from "@material-ui/core";
 import { useForm } from "react-hook-form";
 import fetch from "../utils/fetch";
+import makeField from "../utils/fieldFactory";
 
 export default function EditResourceModel({
   resource,
@@ -19,8 +20,6 @@ export default function EditResourceModel({
   if (!open) {
     return <></>;
   }
-  console.log("attrs");
-  console.log(attrs);
 
   return (
     <Dialog
@@ -35,17 +34,17 @@ export default function EditResourceModel({
           will send updates occasionally.
         </DialogContentText>
         {Object.keys(resource).map((attr) => {
-          console.log(attrs[attr]);
-          return (
-            <TextField
-              margin="dense"
-              id={attr}
-              label={attrs[attr]}
-              type="text"
-              defaultValue={resource[attr]}
-              fullWidth
-            />
-          );
+          return makeField(resource[attr], attrs[attr]);
+          // return (
+          //   <TextField
+          //     margin="dense"
+          //     id={attr}
+          //     label={attrs[attr]["name"]}
+          //     type="text"
+          //     defaultValue={resource[attr]}
+          //     fullWidth
+          //   />
+          // );
         })}
       </DialogContent>
       <DialogActions>

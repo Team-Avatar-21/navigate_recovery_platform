@@ -55,7 +55,12 @@ const GET_FILTERED_RESOURCES = (attributes, filters) => {
   return query;
 };
 
-export default function ResourcesComp({ attrs, filters, filteredRes }) {
+export default function ResourcesComp({
+  attrs,
+  filters,
+  filteredRes,
+  attrs_data,
+}) {
   const auth = useAuth();
   const [resources, setResources] = useState(filteredRes);
   const [isFetched, setIsFetched] = useState(false);
@@ -88,10 +93,13 @@ export default function ResourcesComp({ attrs, filters, filteredRes }) {
   // i.e. inPerson : "in Person"
   const attrs_names = () => {
     const names_obj = {};
-    attrs.forEach((obj) => {
-      const key = obj.attribute_name;
-      const value = obj.filter_name;
-      names_obj[key] = value;
+    attrs_data.forEach((obj) => {
+      const value = obj.filter_human_name;
+      const key = obj.filter_name;
+      names_obj[key] = {};
+      names_obj[key]["value"] = key;
+      names_obj[key]["name"] = value;
+      names_obj[key]["type"] = obj.filter_type;
     });
     return names_obj;
   };

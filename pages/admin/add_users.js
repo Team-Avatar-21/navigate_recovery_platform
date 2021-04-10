@@ -43,6 +43,9 @@ export default function SignIn() {
 
   const onSubmit = (data) => {
     const { email, password } = data; //{email:value,}
+    if (!email.contains("@ggc.edu")) {
+      return "error";
+    }
     const displayName = data.name;
     setAwaitingResponse(true);
     axios
