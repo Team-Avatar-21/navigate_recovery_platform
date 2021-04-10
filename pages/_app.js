@@ -13,6 +13,10 @@ const theme = createMuiTheme({
     secondary: {
       main: "#f1e70d",
     },
+    danger: {
+      main: "#ff1744",
+      light: "#ff4569",
+    },
   },
 });
 function App({ Component, pageProps }) {

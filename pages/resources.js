@@ -1,24 +1,24 @@
 import {
-  Typography,
-  Select,
-  Container,
+  // Typography,
+  // Select,
+  // Container,
   Grid,
-  Button,
-  TextField,
-  FormControl,
-  MenuItem,
-  InputLabel,
+  // Button,
+  // TextField,
+  // FormControl,
+  // MenuItem,
+  // InputLabel,
   Box,
 } from "@material-ui/core";
 import Navbar from "../components/Navbar";
 import { useAuth } from "../utils/auth";
 import useSWR from "swr";
 import fetch from "../utils/fetch";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import ResourcesComp from "../components/ResourcesComp";
 import Filters from "../components/Filters";
-import { createContext, useContext } from "react";
+// import { createContext, useContext } from "react";
 
 /**
  * Displays page with resources and filters
@@ -167,7 +167,6 @@ export default function Resources() {
     <Box className={classes.layout}>
       <Navbar />
       <Grid container justify="center" direction="column" spacing={4}>
-        
         <Grid item>
           <Filters data={data} setFiltersState={handleSetFilters} />
         </Grid>

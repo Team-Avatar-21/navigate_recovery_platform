@@ -4,6 +4,8 @@ import fetch from "../utils/fetch";
 import { useAuth } from "../utils/auth";
 import { useEffect, useState } from "react";
 import ResourceCard from "../components/ResourceCard";
+import EditIcon from "@material-ui/icons/Edit";
+import EditResourceModal from "../components/EditResourceModal";
 /**
  * Component that displays available resources
  * TODO: refactor component to resue in remove_resource, edit resources, and resources pages.
@@ -53,18 +55,16 @@ const GET_FILTERED_RESOURCES = (attributes, filters) => {
   return query;
 };
 
-export default function ResourcesComp({
-  attrs: attributes_obj_arr,
-  filters,
-  filteredRes,
-}) {
+export default function ResourcesComp({ attrs, filters, filteredRes }) {
   const auth = useAuth();
   const [resources, setResources] = useState(filteredRes);
   const [isFetched, setIsFetched] = useState(false);
+  const [editingResource, setEditingResource] = useState("");
+  const [open, setOpen] = useState(false);
 
   // gets all resources in the db
   const handleFetchRes = async () => {
-    const attributes = attributes_obj_arr.map((obj) => obj.attribute_name);
+    const attributes = attrs.map((obj) => obj.attribute_name);
     const d = await fetch(
       GET_RESOURCES(attributes),
       auth.authState.tokenResult.token
@@ -73,7 +73,11 @@ export default function ResourcesComp({
     setResources(d.resources_new);
     setIsFetched(true);
   };
-  // console.log(attributes_obj_arr);
+
+  const handleCloseDialog = () => {
+    setOpen(false);
+  };
+  // console.log(attrs);
   /**
    * Helps to fetch resources from the db when filters state gets updated.
    */
@@ -84,19 +88,27 @@ export default function ResourcesComp({
   // i.e. inPerson : "in Person"
   const attrs_names = () => {
     const names_obj = {};
-    attributes_obj_arr.forEach((obj) => {
+    attrs.forEach((obj) => {
       const key = obj.attribute_name;
       const value = obj.filter_name;
       names_obj[key] = value;
     });
     return names_obj;
   };
+  const onEdit = (resource) => {
+    setEditingResource(resource);
+    setOpen(true);
+  };
 
   const buildResourcesComp = (resources) => {
     return resources.map((resource, idx) => {
       return (
         <Grid item key={idx}>
-          <ResourceCard resources={resource} attrs={attrs_names()} />
+          <ResourceCard
+            resources={resource}
+            onEdit={onEdit}
+            attrs={attrs_names()}
+          />
         </Grid>
       );
     });
@@ -115,7 +127,7 @@ export default function ResourcesComp({
    * current filter state
    */
   const handleFetchFilteredRes = async () => {
-    const attributes = attributes_obj_arr.map((obj) => obj.attribute_name);
+    const attributes = attrs.map((obj) => obj.attribute_name);
     const d = await fetch(
       GET_FILTERED_RESOURCES(attributes, filters),
       auth.authState.tokenResult.token
@@ -132,13 +144,18 @@ export default function ResourcesComp({
 
   return (
     <>
-
       <Button variant="contained" color="primary" onClick={handleFetchRes}>
         Get All Resources
       </Button>
       <Grid container spacing={3}>
         {resComp}
       </Grid>
+      <EditResourceModal
+        resource={editingResource}
+        attrs={attrs_names()}
+        open={open}
+        handleClose={handleCloseDialog}
+      />
     </>
     /*<>
       <Grid container spacint={2}></Grid>

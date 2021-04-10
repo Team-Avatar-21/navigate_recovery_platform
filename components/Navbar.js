@@ -84,21 +84,23 @@ export default function Navbar() {
                 className={classes.title1}
                 variant="outlined"
                 color="secondary"
-                href="/resources"
               >
                 Resources
               </Button>
             </Link>
-            <Link href="/admin/add_users">
-              <Button
-                className={classes.title1}
-                variant="outlined"
-                color="secondary"
-              >
-                {" "}
-                {admin ? <Link href="/admin/add_users">Add Users</Link> : ""}
-              </Button>
-            </Link>
+            {admin ? (
+              <Link href="/admin">
+                <Button
+                  className={classes.title1}
+                  variant="outlined"
+                  color="secondary"
+                >
+                  Admin
+                </Button>
+              </Link>
+            ) : (
+              ""
+            )}
           </Typography>
           <Typography variant="h10" className={classes.title}>
             {auth?.user ? (

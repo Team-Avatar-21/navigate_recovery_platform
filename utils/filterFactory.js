@@ -12,13 +12,6 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import { Controller } from "react-hook-form";
 
-const classes = {
-  formControl: {
-    margin: "10px",
-    minWidth: 200,
-  },
-};
-
 const filterFactory = (filter_data, control) => {
   const {
     filter_human_name: human_name,

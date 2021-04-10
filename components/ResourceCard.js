@@ -1,9 +1,10 @@
 import { Grid, Typography, Button, Card } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { Block } from "@material-ui/icons";
+import { Block, Edit } from "@material-ui/icons";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import { shadows } from "@material-ui/system";
+import EditIcon from "@material-ui/icons/Edit";
 
 /**
  * Component class that represents a resource card
@@ -18,6 +19,7 @@ const useStyles = makeStyles((theme) => {
       display: "block",
       width: "25vw",
       height: "10vw",
+      overflow: "scroll",
     },
 
     gridContainer: {
@@ -28,9 +30,8 @@ const useStyles = makeStyles((theme) => {
   };
 });
 
-export default function ResourceCard({ resources, attrs, onDelete }) {
+export default function ResourceCard({ resources, attrs, onDelete, onEdit }) {
   const classes = useStyles();
-
   /**
    * Prepares data for a resource card
    * simply displays each attribute with appropriate value
@@ -54,6 +55,7 @@ export default function ResourceCard({ resources, attrs, onDelete }) {
           ) : (
             ""
           )}
+          {onEdit ? <EditIcon onClick={() => onEdit(resources)} /> : ""}
         </Card>
       </Grid>
     </Grid>
