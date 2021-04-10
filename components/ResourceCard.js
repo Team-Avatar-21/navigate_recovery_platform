@@ -1,6 +1,7 @@
 import { Grid, Typography, Button, Card } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import DeleteIcon from "@material-ui/icons/Delete";
+import Modal from "./modal.js";
 
 /**
  * Component class that represents a resource card
@@ -34,6 +35,9 @@ export default function ResourceCard({ resources, attrs, onDelete }) {
   return (
     <Card className={classes.card}>
       {cardData}{" "}
+      <Modal show={this.state.show} handleClose={this.hideModal}>
+          <p>Modal</p>
+      </Modal>
       {onDelete ? (
         <DeleteIcon onClick={() => onDelete(resources.organizationName)} />
       ) : (
