@@ -7,7 +7,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@material-ui/core";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import fetch from "../utils/fetch";
 import makeField from "../utils/fieldFactory";
 
@@ -17,9 +17,20 @@ export default function EditResourceModel({
   handleClose,
   attrs,
 }) {
+  const default_values = () => {
+    const defaults = {};
+    Object.keys(resource).forEach((attr) => (defaults[attr] = resource[attr]));
+    return defaults;
+  };
+  const { control, handleSubmit } = useForm({
+    defaultValues: default_values(),
+  });
   if (!open) {
     return <></>;
   }
+  const onSubmit = (data) => {
+    console.log(data);
+  };
 
   return (
     <Dialog
@@ -28,36 +39,29 @@ export default function EditResourceModel({
       aria-labelledby="form-dialog-title"
     >
       <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
-      <DialogContent>
-        <DialogContentText>
-          To subscribe to this website, please enter your email address here. We
-          will send updates occasionally.
-        </DialogContentText>
-        {Object.keys(resource).map((attr) => {
-          return makeField(resource[attr], attrs[attr]);
-          // return (
-          //   <TextField
-          //     margin="dense"
-          //     id={attr}
-          //     label={attrs[attr]["name"]}
-          //     type="text"
-          //     defaultValue={resource[attr]}
-          //     fullWidth
-          //   />
-          // );
-        })}
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose} color="primary">
-          Cancel
-        </Button>
-        <Button onClick={handleClose} color="primary">
-          Save
-        </Button>
-        <Button onClick={handleClose} variant="contained" color="secondary">
-          Delete
-        </Button>
-      </DialogActions>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <DialogContent>
+          <DialogContentText>
+            To subscribe to this website, please enter your email address here.
+            We will send updates occasionally.
+          </DialogContentText>
+          {Object.keys(resource).map((attr, idx) => {
+            const field = makeField(resource[attr], attrs[attr], control);
+            return <div>{field}</div>;
+          })}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Cancel
+          </Button>
+          <Button type={"submit"} color="primary">
+            Save
+          </Button>
+          <Button onClick={handleClose} variant="contained" color="secondary">
+            Delete
+          </Button>
+        </DialogActions>
+      </form>
     </Dialog>
   );
 }
