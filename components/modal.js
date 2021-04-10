@@ -1,6 +1,5 @@
-import '../public/css/modal.css';
 
-export const Modal = ({ handleClose, show }) => {
+const Modal = ({ handleClose, show }) => {
   const showHideClassName = show ? "modal display-block" : "modal display-none";
 
   return (

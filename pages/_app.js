@@ -22,6 +22,7 @@ function App({ Component, pageProps }) {
         <Component {...pageProps} />
       </ProvideAuth>
     </MuiThemeProvider>
+    
   );
 }
 export default App;
