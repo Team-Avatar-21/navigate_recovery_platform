@@ -101,8 +101,8 @@ import {
                     <Link href="/peer/create_peer">Create New Profile</Link>
                 </li>
             </ol>
-            <table>
-                <thead>
+            <table border="1">
+                <thead class="spaceUnder">
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Nick Name</th>
@@ -110,7 +110,6 @@ import {
                     <th>Email</th>
                     <th>Emergency Contact</th>
                     <th>Notes</th>
-                    <th>Resource</th>
                 </thead>
                 <tbody>
                   {(() => {
@@ -118,7 +117,7 @@ import {
 
                       for (let i = 0; i < peers.length; i++) {
                         peerRows.push(
-                          <tr align="center">
+                          <tr align="center" class="spaceUnder">
                             <td>{peers[i].first_name}</td>
                             <td>{peers[i].last_name}</td>
                             <td>{peers[i].nick_name}</td>
@@ -126,7 +125,6 @@ import {
                             <td>{peers[i].peer_email}</td>
                             <td>{peers[i].emergency_name + ": " + peers[i].emergency_number}</td>
                             <td>{peers[i].notes}</td>
-                            <td>{peers[i].resource_id}</td>
                           </tr>
                         );
                       }
