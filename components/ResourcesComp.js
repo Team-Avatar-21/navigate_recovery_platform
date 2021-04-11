@@ -5,6 +5,11 @@ import { useAuth } from "../utils/auth";
 import { useEffect, useState } from "react";
 import ResourceCard from "../components/ResourceCard";
 
+/**
+ * Component that displays available resources
+ * TODO: refactor component to resue in remove_resource, edit resources, and resources pages.
+ */
+
 const parseAttrsForGraphQL = (attributes) => {
   let attrs = "";
   attributes.forEach((element) => {
@@ -26,6 +31,12 @@ const GET_RESOURCES = (attributes) => {
   return query;
 };
 
+/**
+ * Composes a query to fetch resources based on filters
+ * @param {Array} attributes
+ * @param {Object} filters
+ * @returns
+ */
 const GET_FILTERED_RESOURCES = (attributes, filters) => {
   if (Object.keys(filters).length == 0) return filters;
   let attrs = parseAttrsForGraphQL(attributes);
@@ -62,6 +73,10 @@ export default function ResourcesComp({
     setResources(d.Resources);
     setIsFetched(true);
   };
+
+  /**
+   * Helps to fetch resources from the db when filters state gets updated.
+   */
   useEffect(() => {
     if (Object.keys(filters).length > 0) handleFetchFilteredRes();
   }, [filters]);
@@ -78,11 +93,7 @@ export default function ResourcesComp({
   };
 
   const buildResourcesComp = (resources) => {
-    console.log("inside build resources");
-    console.log(resources);
     return resources.map((resource, idx) => {
-      console.log("inside build resources");
-      console.log(resource);
       return (
         <Grid item key={idx}>
           <ResourceCard resources={resource} attrs={attrs_names()} />
@@ -94,11 +105,15 @@ export default function ResourcesComp({
   //creates an array of resource cards
 
   let resComp = buildResourcesComp(resources);
-  console.log(resComp);
+
   if (!resources.length && isFetched) {
     resComp = <Grid item>No Resources</Grid>;
   }
 
+  /**
+   * helper method to handle fetching of resources based on
+   * current filter state
+   */
   const handleFetchFilteredRes = async () => {
     const attributes = attributes_obj_arr.map((obj) => obj.attribute_name);
     const d = await fetch(
@@ -106,14 +121,13 @@ export default function ResourcesComp({
       auth.authState.tokenResult.token
     )
       .then((de) => {
-        console.log(de);
+        // console.log(de);
         setResources(de.Resources);
       })
       .catch((err) => {
         console.log(err);
         setResources([]);
       });
-    // setResources(d.Resources);
   };
 
   return (

@@ -18,7 +18,7 @@ const _fetch = async (...args) => {
   const res_json = await res.json();
 
   if (res_json.errors) {
-    throw JSON.stringify(res_json.errors);
+    throw res_json.errors;
   }
   return res_json.data;
 };
