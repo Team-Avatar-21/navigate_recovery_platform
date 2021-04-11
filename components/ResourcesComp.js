@@ -4,6 +4,7 @@ import fetch from "../utils/fetch";
 import { useAuth } from "../utils/auth";
 import { useEffect, useState } from "react";
 import ResourceCard from "../components/ResourceCard";
+
 /**
  * Component that displays available resources
  * TODO: refactor component to resue in remove_resource, edit resources, and resources pages.
