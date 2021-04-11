@@ -1,23 +1,13 @@
-import {
-  // Typography,
-  // Select,
-  // Container,
-  Grid,
-  // Button,
-  // TextField,
-  // FormControl,
-  // MenuItem,
-  // InputLabel,
-  Box,
-} from "@material-ui/core";
+import { Grid, Box } from "@material-ui/core";
 import Navbar from "../components/Navbar";
 import { useAuth } from "../utils/auth";
 import useSWR from "swr";
 import fetch from "../utils/fetch";
-import { useState } from "react";
+import { useState, createContext, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import ResourcesComp from "../components/ResourcesComp";
 import Filters from "../components/Filters";
+import { ResourcesProvider } from "./../components/ResourcesContext";
 // import { createContext, useContext } from "react";
 
 /**
@@ -165,20 +155,22 @@ export default function Resources() {
 
   return (
     <Box className={classes.layout}>
-      <Navbar />
-      <Grid container justify="center" direction="column" spacing={4}>
-        <Grid item>
-          <Filters data={data} setFiltersState={handleSetFilters} />
+      <ResourcesProvider>
+        <Navbar />
+        <Grid container justify="center" direction="column" spacing={4}>
+          <Grid item>
+            <Filters data={data} setFiltersState={handleSetFilters} />
+          </Grid>
+          <Grid item>
+            <ResourcesComp
+              attrs_data={data}
+              attrs={attributes}
+              filters={filtersState}
+              filteredRes={filteredRes}
+            />
+          </Grid>
         </Grid>
-        <Grid item>
-          <ResourcesComp
-            attrs_data={data}
-            attrs={attributes}
-            filters={filtersState}
-            filteredRes={filteredRes}
-          />
-        </Grid>
-      </Grid>
+      </ResourcesProvider>
     </Box>
   );
 }

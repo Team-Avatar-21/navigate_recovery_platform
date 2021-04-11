@@ -12,6 +12,7 @@ import fetch from "../utils/fetch";
 import { useAuth } from "../utils/auth";
 import makeField from "../utils/fieldFactory";
 import { useState } from "react";
+import { useResources } from "../components/ResourcesContext";
 
 const prepareSet = (values) => {
   let set = ``;
@@ -36,6 +37,7 @@ const UPDATE_RESOURCES = (values, attrs, id) => {
     query: `mutation UPDATE_RESOURCE {
       update_resources_new_by_pk(pk_columns: {id: ${id}}, _set: {${set}}) {
        ${attributes}
+       id
       }
     }`,
   };
@@ -52,6 +54,7 @@ export default function EditResourceModel({
     Object.keys(resource).forEach((attr) => (defaults[attr] = resource[attr]));
     return defaults;
   };
+  const res = useResources();
   const auth = useAuth();
   const [loading, setLoading] = useState(false);
   const { control, handleSubmit } = useForm({
@@ -70,6 +73,10 @@ export default function EditResourceModel({
       .then((data) => {
         console.log(data);
         setLoading(false);
+        res.dispatch({
+          type: "update",
+          value: data.update_resources_new_by_pk,
+        });
       })
       .catch((err) => {
         console.log(err);

@@ -2,10 +2,11 @@ import { Typography, Button, Grid, Container } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import fetch from "../utils/fetch";
 import { useAuth } from "../utils/auth";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import ResourceCard from "../components/ResourceCard";
 import EditIcon from "@material-ui/icons/Edit";
 import EditResourceModal from "../components/EditResourceModal";
+import { useResources } from "../components/ResourcesContext";
 /**
  * Component that displays available resources
  * TODO: refactor component to resue in remove_resource, edit resources, and resources pages.
@@ -65,6 +66,7 @@ export default function ResourcesComp({
 }) {
   const auth = useAuth();
   const admin = auth.authState.tokenResult.claims.admin;
+  const res = useResources();
   const [resources, setResources] = useState(filteredRes);
   const [isFetched, setIsFetched] = useState(false);
   const [editingResource, setEditingResource] = useState("");
@@ -77,8 +79,9 @@ export default function ResourcesComp({
       GET_RESOURCES(attributes),
       auth.authState.tokenResult.token
     );
-    console.log(d);
+    // console.log(d);
     setResources(d.resources_new);
+    res.dispatch({ type: "set", value: d.resources_new });
     setIsFetched(true);
   };
 
@@ -112,6 +115,7 @@ export default function ResourcesComp({
   };
 
   const buildResourcesComp = (resources) => {
+    console.log(resources);
     return resources.map((resource, idx) => {
       return (
         <Grid item key={idx}>
@@ -127,7 +131,7 @@ export default function ResourcesComp({
 
   //creates an array of resource cards
 
-  let resComp = buildResourcesComp(resources);
+  let resComp = buildResourcesComp(res.state.resources);
 
   if (!resources.length && isFetched) {
     resComp = <Grid item>No Resources</Grid>;
