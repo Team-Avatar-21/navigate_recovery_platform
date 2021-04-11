@@ -42,7 +42,6 @@ export default function Navbar() {
   const auth = useAuth();
   const admin = auth?.authState?.tokenResult?.claims?.admin;
   return (
-<<<<<<< Updated upstream
     <div className = {classes.root}>
       <AppBar position = "static">
         <Toolbar>
@@ -50,6 +49,8 @@ export default function Navbar() {
             <Button className = {classes.title1} variant = "outlined" color = "secondary" href="/"> Main </Button>
             
             <Button className = {classes.title1} variant = "outlined" color = "secondary" href="/resources">Resources</Button>
+
+            <Button className = {classes.title1} variant = "outlined" color = "secondary" href="/peer">Peer</Button>
 
             <Button className = {classes.title1} variant = "outlined" color = "secondary"> {admin ? <Link href="/admin/add_users">Add Users</Link> : ""}</Button>
           </Typography>
@@ -70,31 +71,6 @@ export default function Navbar() {
           </Typography>
         </Toolbar>
       </AppBar>
-=======
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        minWidth: "25%",
-        maxWidth: "50%",
-      }}
-    >
-      {auth?.user ? (
-        <>
-          <button onClick={() => auth.signout()}>Logout</button>
-          <span>{auth.user.email}</span>{" "}
-          <Link href="/resources">Resources</Link>
-          <Link href="/peer">Peer</Link>
-        </>
-      ) : (
-        <>
-          {/* <Link href="/auth/signup">Signup</Link> */}
-          <Link href="/auth/signin">Signin</Link>
-        </>
-      )}
-      {admin ? <Link href="/admin">Admin</Link> : ""}
-      <Link href="/"> Main</Link>
->>>>>>> Stashed changes
     </div>
   );
 }
