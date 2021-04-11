@@ -78,7 +78,7 @@ import {
     const getData = async (...args) => {
       await fetch(GET_ALL_PEERS, auth.authState.tokenResult.token) 
       .then((data) => {
-          setPeers(data.Peer)
+          setPeers(data.peer)
           console.info(data);
       })
       .catch((err) => {
@@ -91,27 +91,14 @@ import {
     if (!auth.user) {
       return "access deined";
     }
-  
-    let peertable; 
-    if (peers && peers.peer){
-        peers.peer.map((peer) => {
-            return (
-                <tr>
-                    <td>peer.first_name</td>
-                    <td>peer.last_name</td>
-                    <td>nick_name</td>
-                </tr>
-            )
-        })
-    }
-    
+
     return (
       <Box className={classes.layout}>
         <Navbar />
         <Grid container justify="center" direction="column" spacing={4}>
             <ol>
                 <li>
-                    <Link href="/peer/create_peer">Create New Profile</Link>
+                    <Link href="/admin/add_users">Create New Profile</Link>
                 </li>
             </ol>
             <table>
@@ -121,7 +108,21 @@ import {
                     <th>Nick Name</th>
                 </thead>
                 <tbody>
-                {peertable}
+                  {(() => {
+                      const peerRows = [];
+
+                      for (let i = 0; i < peers.length; i++) {
+                        peerRows.push(
+                          <tr>
+                            <td>{peers[i].first_name}</td>
+                            <td>{peers[i].last_name}</td>
+                            <td>{peers[i].nick_name}</td>
+                          </tr>
+                        );
+                      }
+
+                      return peerRows;
+                    })()}
                 </tbody>
             </table>
         </Grid>

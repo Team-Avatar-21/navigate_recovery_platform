@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
-import axios from "axios";
 import { useAuth } from "../../utils/auth";
 import Navbar from "../../components/Navbar";
 import FormInput from "../../components/FormInput";
@@ -15,47 +14,6 @@ import {
   Snackbar,
 } from "@material-ui/core";
 import fetch from "../../utils/fetch";
-import useSWR from "swr";
-
-/**
- * This Page shows logic and tools to add peer to the DB.
- * TODO: add new field to already exisitng ones.
- */
-
-const GET_ALL_PEERS = {
-  query: `query GET_ALL_PEERS {
-    peer {
-      emergency_name
-      emergency_number
-      first_name
-      last_name
-      nick_name
-      notes
-      peer_email
-      peer_id
-      peer_number
-      resource_id
-    }
-    peer_visit {
-      peer_id
-      visit_ts
-    }
-  }`,
-};
-
-/**
- * Helper method that composes peers in a shape needed for GraphQL query
- * TODO: take this function out to a separate module
- * @param {Array} peer that need to be returned
- * @returns {String}
- */
-const parseAttrsForGraphQL = (peer) => {
-  let peerAttr = "";
-  peer.forEach((element) => {
-    peerAttr += element + "\n";
-  });
-  return peerAttr;
-};
 
 /**
  * Composes a mutation string for GraphQL request
@@ -137,7 +95,7 @@ export default function AddPeer() {
         <Grid item md={6} xs={10}>
           <StyledPaper>
             <Typography align="center" variant="h2">
-              Add Resources{" "}
+              Create Peer Profile{" "}
               {awaitingResponse ? (
                 <CircularProgress color="primary" size="0.8em" />
               ) : (
@@ -148,14 +106,16 @@ export default function AddPeer() {
               <form onSubmit={handleSubmit(onSubmit)}>
                 <Grid container direction="column">
                 <FormControl margin="normal">
-                    <FormInput
-                        required
-                        autoComplete="off"
-                        type="text"
-                        id="first_name"
-                    />
+                    <FormInput required autoComplete="off" type="text" id="first_name" name="first_name" label="First Name"/>  
+                    <FormInput required autoComplete="off" type="text" id="last_name" name="last_name" label="Last Name"/>
+                    <FormInput autoComplete="off" type="text" id="nick_name" name="nick_name" label="Nick Name"/>
+                    <FormInput autoComplete="off" type="text" id="peer_number" name="peer_number" label="Phone"/>
+                    <FormInput autoComplete="off" type="text" id="peer_email" name="peer_email" label="Email"/>
+                    <FormInput autoComplete="off" type="text" id="emergency_name" name="emergency_name" label="Emergency Contact"/>
+                    <FormInput autoComplete="off" type="text" id="emergency_number" name="niemergency_number" label="Emergency Phone"/>
+                    <FormInput autoComplete="off" type="text" id="notes" name="notes" label="Notes"/>
                 </FormControl>
-                  <FormControl margin="normal">
+                <FormControl margin="normal">
                     <Button
                       type="submit"
                       variant="contained"

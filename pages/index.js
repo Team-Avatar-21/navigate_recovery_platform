@@ -9,8 +9,8 @@ export default function Index() {
   return (
     <>
       <Navbar />
-      <div>
-        <img src="/NavRecPic.jpg" style={{ width:1500, height:500}}/>
+      <div align="center">
+        <img src="/NavRecPic.jpg" style={{ width:1300, height:500}}/>
       </div>
     </>
   );
