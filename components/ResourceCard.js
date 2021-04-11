@@ -30,17 +30,17 @@ const useStyles = makeStyles((theme) => {
   };
 });
 
-export default function ResourceCard({ resources, attrs, onDelete, onEdit }) {
+export default function ResourceCard({ resource, attrs, onDelete, onEdit }) {
   const classes = useStyles();
   /**
    * Prepares data for a resource card
    * simply displays each attribute with appropriate value
    */
-  const cardData = Object.keys(resources).map((key) => {
+  const cardData = Object.keys(attrs).map((key) => {
     const attribute_name = attrs[key]["name"];
     return (
       <Typography key={key}>
-        {attribute_name}: {String(resources[key])}
+        {attribute_name}: {String(resource[key])}
       </Typography>
     );
   });
@@ -50,11 +50,11 @@ export default function ResourceCard({ resources, attrs, onDelete, onEdit }) {
         <Card className={classes.card} variant="outlined">
           {cardData}
           {onDelete ? (
-            <DeleteIcon onClick={() => onDelete(resources.organizationName)} />
+            <DeleteIcon onClick={() => onDelete(resource.organizationName)} />
           ) : (
             ""
           )}
-          {onEdit ? <EditIcon onClick={() => onEdit(resources)} /> : ""}
+          {onEdit ? <EditIcon onClick={() => onEdit(resource)} /> : ""}
         </Card>
       </Grid>
     </Grid>

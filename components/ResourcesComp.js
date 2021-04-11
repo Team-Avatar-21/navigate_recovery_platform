@@ -25,6 +25,7 @@ const GET_RESOURCES = (attributes) => {
     query: `query GET_ALL_RESROUCES {
       resources_new {
         ${attrs}
+        id
       }
     }`,
   };
@@ -49,6 +50,7 @@ const GET_FILTERED_RESOURCES = (attributes, filters) => {
     query: `query GET_FILTERED_RESOURCES{
       resources_new(where:{${where}}){
         ${attrs}
+        id
       }
     }`,
   };
@@ -62,6 +64,7 @@ export default function ResourcesComp({
   attrs_data,
 }) {
   const auth = useAuth();
+  const admin = auth.authState.tokenResult.claims.admin;
   const [resources, setResources] = useState(filteredRes);
   const [isFetched, setIsFetched] = useState(false);
   const [editingResource, setEditingResource] = useState("");
@@ -113,8 +116,8 @@ export default function ResourcesComp({
       return (
         <Grid item key={idx}>
           <ResourceCard
-            resources={resource}
-            onEdit={onEdit}
+            resource={resource}
+            onEdit={admin ? onEdit : undefined}
             attrs={attrs_names()}
           />
         </Grid>
