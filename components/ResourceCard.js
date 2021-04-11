@@ -1,21 +1,35 @@
 import { Grid, Typography, Button, Card } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import { Block } from "@material-ui/icons";
+import CardActionArea from '@material-ui/core/CardActionArea';
+import { shadows } from '@material-ui/system';
 import DeleteIcon from "@material-ui/icons/Delete";
 import { useState } from "react";
 import { useAuth } from "../utils/auth";
 import fetch from "../utils/fetch";
+
 
 /**
 * Component class that represents a resource card
 */
 const useStyles = makeStyles((theme) => {
   return {
-card: {
-minWidth: " 150px",
-minHeight: "150px",
-padding: "10px",
-},
-    };
+    card: {
+      background: "#f1f1f1",
+    '&:hover': {
+       background: "#FFFF66",
+    },
+      display: 'block',
+      width: '25vw',
+      height: '10vw',
+    }, 
+
+    gridContainer:{
+      paddingTop: "45px",
+      paddingLeft: "60px",
+      paddingRight: "25px",
+    },
+  };
 });
 
 export default function ResourceCard({ resources, attrs, onDelete }) {
@@ -107,14 +121,19 @@ export default function ResourceCard({ resources, attrs, onDelete }) {
   }
 
   return (
-    <Card className={classes.card}>
-      {cardData}{" "}
-      <MoreInfo></MoreInfo>
-      {onDelete ? (
+    <Grid container spacing={4} className={classes.gridContainer} >
+      <Grid item>
+        <Card className={classes.card} variant="outlined" >
+          {cardData}
+          <MoreInfo></MoreInfo>
+          {onDelete ? (
         <DeleteIcon onClick={() => onDelete(resources.organizationName)} />
       ) : (
         ""
       )}
-    </Card>
+        </Card>
+      </Grid>
+    </Grid>
+    
   );
 }

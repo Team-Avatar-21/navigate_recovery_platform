@@ -157,9 +157,7 @@ export default function Resources() {
     <Box className={classes.layout}>
       <Navbar />
       <Grid container justify="center" direction="column" spacing={4}>
-        <Grid item>
-          <Typography>Filters:</Typography>
-        </Grid>
+        
         <Grid item>
           <Filters data={data} setFiltersState={handleSetFilters} />
         </Grid>
