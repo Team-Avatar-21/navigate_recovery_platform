@@ -112,7 +112,7 @@ export default function AddPeer() {
                     <FormInput autoComplete="off" type="text" id="peer_number" name="peer_number" label="Phone"/>
                     <FormInput autoComplete="off" type="text" id="peer_email" name="peer_email" label="Email"/>
                     <FormInput autoComplete="off" type="text" id="emergency_name" name="emergency_name" label="Emergency Contact"/>
-                    <FormInput autoComplete="off" type="text" id="emergency_number" name="niemergency_number" label="Emergency Phone"/>
+                    <FormInput autoComplete="off" type="text" id="emergency_number" name="emergency_number" label="Emergency Phone"/>
                     <FormInput autoComplete="off" type="text" id="notes" name="notes" label="Notes"/>
                 </FormControl>
                 <FormControl margin="normal">

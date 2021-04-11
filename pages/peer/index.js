@@ -98,7 +98,7 @@ import {
         <Grid container justify="center" direction="column" spacing={4}>
             <ol>
                 <li>
-                    <Link href="/admin/add_users">Create New Profile</Link>
+                    <Link href="/peer/create_peer">Create New Profile</Link>
                 </li>
             </ol>
             <table>
@@ -106,6 +106,11 @@ import {
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Nick Name</th>
+                    <th>Phone Number</th>
+                    <th>Email</th>
+                    <th>Emergency Contact</th>
+                    <th>Notes</th>
+                    <th>Resource</th>
                 </thead>
                 <tbody>
                   {(() => {
@@ -113,10 +118,15 @@ import {
 
                       for (let i = 0; i < peers.length; i++) {
                         peerRows.push(
-                          <tr>
+                          <tr align="center">
                             <td>{peers[i].first_name}</td>
                             <td>{peers[i].last_name}</td>
                             <td>{peers[i].nick_name}</td>
+                            <td>{peers[i].peer_number}</td>
+                            <td>{peers[i].peer_email}</td>
+                            <td>{peers[i].emergency_name + ": " + peers[i].emergency_number}</td>
+                            <td>{peers[i].notes}</td>
+                            <td>{peers[i].resource_id}</td>
                           </tr>
                         );
                       }
