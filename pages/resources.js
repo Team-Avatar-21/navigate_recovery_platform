@@ -7,7 +7,8 @@ import { useState, createContext, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import ResourcesComp from "../components/ResourcesComp";
 import Filters from "../components/Filters";
-import { ResourcesProvider } from "./../components/ResourcesContext";
+import { useResources } from "./../components/ResourcesContext";
+import { fetchAllRes } from "../utils/graphql/graphqlHelper";
 // import { createContext, useContext } from "react";
 
 /**
@@ -88,10 +89,20 @@ const useStyles = makeStyles((theme) => ({
 export default function Resources() {
   const classes = useStyles();
   const auth = useAuth();
+  const resContext = useResources();
   const [filtersState, setFiltersState] = useState({});
   const [attributes, setAttributes] = useState([]);
   const [filteredRes, setFilteredRes] = useState([]);
 
+  const buildFiltersObject = (filters_raw, resources) => {
+    return filters_raw.map((filter, idx) => {
+      const filter_options = new Set();
+      resources.forEach((resource) => {
+        filter_options.add(resource[filter.filter_name]);
+      });
+      return { ...filter, filter_options };
+    });
+  };
   /**
    * Method that fetches all filter values from the DB
    * also sets attributes based of the filters
@@ -99,27 +110,33 @@ export default function Resources() {
    * @returns {Object} response object from GraphQL endpoint
    */
   const getData = async (...args) => {
-    const { filters_new: fs } = await fetch(
-      GET_ALL_FILTERS,
-      auth.authState.tokenResult.token
-    );
+    const token = auth.authState.tokenResult.token;
+    const { filters_new: fs } = await fetch(GET_ALL_FILTERS, token);
     // setFiltersState(fs);
 
+    let attrs = fs.map((filter) => {
+      const {
+        filter_name: attribute_name,
+        filter_human_name: filter_name,
+      } = filter;
+      const obj = {
+        attribute_name: attribute_name,
+        filter_name: filter_name,
+      };
+      obj[attribute_name] = filter_name;
+      return obj;
+    });
+    setAttributes(attrs);
+    let res = await fetchAllRes(attrs, token);
+    resContext.dispatch({
+      type: "set_filters",
+      value: buildFiltersObject(fs, res),
+    });
+    resContext.dispatch({
+      type: "set",
+      value: res,
+    });
     console.log(fs);
-    setAttributes(
-      fs.map((filter) => {
-        const {
-          filter_name: attribute_name,
-          filter_human_name: filter_name,
-        } = filter;
-        const obj = {
-          attribute_name: attribute_name,
-          filter_name: filter_name,
-        };
-        obj[attribute_name] = filter_name;
-        return obj;
-      })
-    );
     return fs;
   };
   const { data, error, isValidating } = useSWR(GET_ALL_FILTERS, getData, {
@@ -152,25 +169,23 @@ export default function Resources() {
   //   console.log(d);
   //   setResources(d.Resources);
   // };
-
   return (
     <Box className={classes.layout}>
-      <ResourcesProvider>
-        <Navbar />
-        <Grid container justify="center" direction="column" spacing={4}>
-          <Grid item>
-            <Filters data={data} setFiltersState={handleSetFilters} />
-          </Grid>
-          <Grid item>
-            <ResourcesComp
-              attrs_data={data}
-              attrs={attributes}
-              filters={filtersState}
-              filteredRes={filteredRes}
-            />
-          </Grid>
+      <Navbar />
+
+      <Grid container justify="center" direction="column" spacing={4}>
+        <Grid item>
+          <Filters data={data} setFiltersState={handleSetFilters} />
         </Grid>
-      </ResourcesProvider>
+        <Grid item>
+          <ResourcesComp
+            attrs_data={data}
+            attrs={attributes}
+            filters={filtersState}
+            filteredRes={filteredRes}
+          />
+        </Grid>
+      </Grid>
     </Box>
   );
 }

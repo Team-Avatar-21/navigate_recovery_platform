@@ -44,6 +44,7 @@ const GET_FILTERED_RESOURCES = (attributes, filters) => {
   if (Object.keys(filters).length == 0) return filters;
   let attrs = parseAttrsForGraphQL(attributes);
   let where = "";
+  console.log(filters);
   Object.keys(filters).forEach((filter) => {
     if (filters[filter]) where += `${filter}: {_eq: "${filters[filter]}"},`;
   });
@@ -99,7 +100,7 @@ export default function ResourcesComp({
   // i.e. inPerson : "in Person"
   const attrs_names = () => {
     const names_obj = {};
-    attrs_data.forEach((obj) => {
+    res.state.filters.forEach((obj) => {
       const value = obj.filter_human_name;
       const key = obj.filter_name;
       names_obj[key] = {};
@@ -115,7 +116,6 @@ export default function ResourcesComp({
   };
 
   const buildResourcesComp = (resources) => {
-    console.log(resources);
     return resources.map((resource, idx) => {
       return (
         <Grid item key={idx}>
@@ -150,6 +150,7 @@ export default function ResourcesComp({
       .then((de) => {
         // console.log(de);
         setResources(de.resources_new);
+        res.dispatch({ type: "set", value: de.resources_new });
       })
       .catch((err) => {
         console.log(err);

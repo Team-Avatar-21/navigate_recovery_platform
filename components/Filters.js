@@ -12,6 +12,7 @@ import { useState, useContext } from "react";
 import { useForm, Controller } from "react-hook-form";
 import FormInput from "./FormInput";
 import filterFactory from "../utils/filterFactory";
+import { useResources } from "../components/ResourcesContext";
 
 /**
  * Component class that represents filters to filter through resources
@@ -30,6 +31,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Filters({ data, setFiltersState }) {
+  const resContext = useResources();
   //default values for filters are all filters empty
   //as long as all filters are of type SELECT
   const default_values = () => {
@@ -37,7 +39,7 @@ export default function Filters({ data, setFiltersState }) {
     data?.forEach((attr) => (def_vals[attr.filter_name] = ""));
     return def_vals;
   };
-
+  console.log(resContext);
   const { register, handleSubmit, watch, control, reset, getValues } = useForm({
     defaultValues: default_values(),
   });
@@ -63,7 +65,7 @@ export default function Filters({ data, setFiltersState }) {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={2} style={{ display: "flex", flexWrap: "wrap" }}>
-        {data.map((filter_data, idx) => {
+        {resContext.state.filters.map((filter_data, idx) => {
           const filter = filterFactory(filter_data, control);
           const { filter_name, filter_human_name } = filter_data;
           return (

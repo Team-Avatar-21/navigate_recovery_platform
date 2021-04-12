@@ -13,13 +13,17 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Controller } from "react-hook-form";
 
 const filterFactory = (filter_data, control) => {
-  const {
+  let {
     filter_human_name: human_name,
     filter_name: name,
     filter_type: type,
     filter_options: options,
     important,
   } = filter_data;
+  console.log(name);
+  console.log(options);
+  options = Array.from(options);
+
   switch (type) {
     case "select": {
       return makeSelect(options, name, human_name, control);
@@ -46,11 +50,13 @@ const makeSelect = (options, name, human_name, control) => {
         defaultValue=""
         as={
           <Select defaultValue="">
-            {options.map((option, idx) => (
-              <MenuItem name={name} value={option.option_value} key={idx}>
-                {option.option_value}
-              </MenuItem>
-            ))}
+            {options.map((option, idx) => {
+              return (
+                <MenuItem name={name} value={option} key={idx}>
+                  {option}
+                </MenuItem>
+              );
+            })}
             <MenuItem name={name} value="">
               None
             </MenuItem>
@@ -70,11 +76,13 @@ const makeBooleanSelect = (options, name, human_name, control) => {
         control={control}
         as={
           <Select defaultValue="">
-            {options.map((option, idx) => (
-              <MenuItem name={name} value={option.option_value} key={idx}>
-                {option.option_value == "true" ? "Yes" : "No"}
-              </MenuItem>
-            ))}
+            {options.map((option, idx) => {
+              return (
+                <MenuItem name={name} value={String(option)} key={idx}>
+                  {option ? "Yes" : "No"}
+                </MenuItem>
+              );
+            })}
             <MenuItem name={name} value="">
               N/A
             </MenuItem>
