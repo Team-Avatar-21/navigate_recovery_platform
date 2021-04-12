@@ -1,4 +1,4 @@
-import { Grid, Typography, Button, Card } from "@material-ui/core";
+import { Grid, Typography, Button, Card, IconButton } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { Block, Edit } from "@material-ui/icons";
@@ -18,8 +18,7 @@ const useStyles = makeStyles((theme) => {
       },
       display: "block",
       width: "25vw",
-      height: "10vw",
-      overflow: "scroll",
+      minHeight: "10vw",
     },
 
     gridContainer: {
@@ -60,7 +59,13 @@ export default function ResourceCard({
           ) : (
             ""
           )}
-          {onEdit ? <EditIcon onClick={() => onEdit(resource)} /> : ""}
+          {onEdit ? (
+            <IconButton onClick={() => onEdit(resource)}>
+              <EditIcon />
+            </IconButton>
+          ) : (
+            ""
+          )}
           <Button onClick={() => onView(resource)}> See More </Button>
         </Card>
       </Grid>
