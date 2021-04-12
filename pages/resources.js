@@ -1,4 +1,4 @@
-import { Grid, Box } from "@material-ui/core";
+import { Grid, Box, CircularProgress, Typography } from "@material-ui/core";
 import Navbar from "../components/Navbar";
 import { useAuth } from "../utils/auth";
 import useSWR from "swr";
@@ -145,7 +145,24 @@ export default function Resources() {
     return "access deined";
   }
   if (isValidating) {
-    return "loading...";
+    return (
+      <>
+        <Navbar />
+        <Grid container alignItems={"center"} justify={"center"}>
+          <Grid
+            item
+            container
+            justify="center"
+            alignItems="center"
+            direction="column"
+            style={{ margin: "5rem" }}
+          >
+            <Typography variant="h3">Loading resources ...</Typography>
+            <CircularProgress size={"60px"} />
+          </Grid>
+        </Grid>
+      </>
+    );
   }
 
   const handleSetFilters = (data) => {

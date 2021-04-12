@@ -6,7 +6,9 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Snackbar,
 } from "@material-ui/core";
+import { Alert, AlertTitle } from "@material-ui/lab";
 import { Controller, useForm } from "react-hook-form";
 import fetch from "../utils/fetch";
 import { useAuth } from "../utils/auth";
@@ -53,6 +55,26 @@ const UPDATE_RESOURCES = (values, attrs, id) => {
   };
   return query;
 };
+
+/**
+ * Composes a mutation string for GraphQL request to remove a resource
+ * @param {String} orgName name of the org since it is a pk
+ * @returns {String}
+ */
+const REMOVE_RESOURCE = (orgName) => {
+  const mutation = {
+    query: `mutation REMOVE_RESOURCE {
+        delete_Resources(where: {organizationName: {_eq: "${orgName}"}}) {
+          returning {
+            organizationName
+          }
+        }
+      }
+    `,
+  };
+  return mutation;
+};
+
 export default function EditResourceModel({
   resource,
   open,
@@ -67,6 +89,11 @@ export default function EditResourceModel({
   const res = useResources();
   const auth = useAuth();
   const [loading, setLoading] = useState(false);
+  const [errorSnack, setErrorSnack] = useState({ open: false, message: "" });
+  const [successSnack, setSuccessSnack] = useState({
+    open: false,
+    message: "",
+  });
   const { control, handleSubmit } = useForm({
     defaultValues: default_values(),
   });
@@ -94,10 +121,48 @@ export default function EditResourceModel({
           type: "update_filters",
           value: { new: edited_data, old: resource },
         });
+        showSuccessMessage({ message: "Updated Successfully" });
       })
       .catch((err) => {
         console.log(err);
         setLoading(false);
+      });
+  };
+
+  const showSuccessMessage = (data) => {
+    setSuccessSnack({ open: true, message: data.message });
+  };
+  const handleCloseSuccess = () => {
+    setSuccessSnack({ open: false, message: "" });
+  };
+  const handleOpenError = (err) => {
+    setErrorSnack({ open: true, message: err.message });
+  };
+  const handleCloseError = () => {
+    setErrorSnack({ oepn: false, message: "" });
+  };
+  /**
+   *  Deletes a resource from DB
+   * displays success/failure message respectively
+   * @param {String} orgName pk of the resource to be deleted from DB
+   */
+  const handleDelete = async (orgName) => {
+    setAwaitingResponse(true);
+    fetch(REMOVE_RESOURCE(orgName), auth.authState.tokenResult.token)
+      .then((res) => {
+        setResources(
+          resources.filter((resource) => {
+            return resource.organizationName != orgName;
+          })
+        );
+        setAwaitingResponse(false);
+        showSuccessMessage({
+          message: `Resource: ${orgName} was successfully deleted.`,
+        });
+      })
+      .catch((err) => {
+        handleOpenError(err[0]);
+        setAwaitingResponse(false);
       });
   };
 
@@ -132,6 +197,28 @@ export default function EditResourceModel({
           {loading ? "loading..." : ""}
         </DialogActions>
       </form>
+      <Snackbar
+        open={errorSnack.open}
+        autoHideDuration={6000}
+        onClose={handleCloseError}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert onClose={handleCloseError} severity="error">
+          <AlertTitle>Error</AlertTitle>
+          {errorSnack.message}
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={successSnack.open}
+        autoHideDuration={6000}
+        onClose={handleCloseSuccess}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert onClose={handleCloseSuccess} severity="success">
+          <AlertTitle>Success</AlertTitle>
+          {successSnack.message}
+        </Alert>
+      </Snackbar>
     </Dialog>
   );
 }
