@@ -7,6 +7,7 @@ import ResourceCard from "../components/ResourceCard";
 import EditIcon from "@material-ui/icons/Edit";
 import EditResourceModal from "../components/EditResourceModal";
 import { useResources } from "../components/ResourcesContext";
+import ViewResourceModal from "../components/ViewResourceModal";
 /**
  * Component that displays available resources
  * TODO: refactor component to resue in remove_resource, edit resources, and resources pages.
@@ -82,6 +83,8 @@ export default function ResourcesComp({
   const [isFetched, setIsFetched] = useState(false);
   const [editingResource, setEditingResource] = useState("");
   const [open, setOpen] = useState(false);
+  const [openViewModal, setOpenViewModal] = useState(false);
+  const [viewingResource, setViewingResource] = useState("");
 
   // gets all resources in the db
   const handleFetchRes = async () => {
@@ -98,6 +101,9 @@ export default function ResourcesComp({
 
   const handleCloseDialog = () => {
     setOpen(false);
+  };
+  const handleCloseViewModal = () => {
+    setOpenViewModal(false);
   };
   // console.log(attrs);
   /**
@@ -124,6 +130,10 @@ export default function ResourcesComp({
     setEditingResource(resource);
     setOpen(true);
   };
+  const onView = (resource) => {
+    setViewingResource(resource);
+    setOpenViewModal(true);
+  };
 
   const buildResourcesComp = (resources) => {
     return resources.map((resource, idx) => {
@@ -133,6 +143,7 @@ export default function ResourcesComp({
             resource={resource}
             onEdit={admin ? onEdit : undefined}
             attrs={attrs_names()}
+            onView={onView}
           />
         </Grid>
       );
@@ -181,6 +192,12 @@ export default function ResourcesComp({
         attrs={attrs_names()}
         open={open}
         handleClose={handleCloseDialog}
+      />
+      <ViewResourceModal
+        resource={viewingResource}
+        open={openViewModal}
+        handleClose={handleCloseViewModal}
+        attrs={attrs_names()}
       />
     </>
     /*<>

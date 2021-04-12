@@ -30,7 +30,13 @@ const useStyles = makeStyles((theme) => {
   };
 });
 
-export default function ResourceCard({ resource, attrs, onDelete, onEdit }) {
+export default function ResourceCard({
+  resource,
+  attrs,
+  onDelete,
+  onEdit,
+  onView,
+}) {
   const classes = useStyles();
   /**
    * Prepares data for a resource card
@@ -55,6 +61,7 @@ export default function ResourceCard({ resource, attrs, onDelete, onEdit }) {
             ""
           )}
           {onEdit ? <EditIcon onClick={() => onEdit(resource)} /> : ""}
+          <Button onClick={() => onView(resource)}> See More </Button>
         </Card>
       </Grid>
     </Grid>
