@@ -21,8 +21,20 @@ function resourcesReducer(state, action) {
       return { ...state, resources: action.value };
     }
     case "update_filters": {
-      console.log("update_filters");
-      return { ...state, filters: action.value };
+      const newFilters = [...state.filters];
+      const newRes = action.value.new;
+      const oldRes = action.value.old;
+      console.log("newres");
+      console.log(newRes);
+      newFilters.forEach((filter) => {
+        const { filter_name } = filter;
+        if (newRes[filter_name]) {
+          filter.filter_options.add(newRes[filter_name]);
+          // filter.filter_options.delete(oldRes[filter_name]);
+        }
+      });
+
+      return { ...state, filters: [...newFilters] };
     }
   }
 }

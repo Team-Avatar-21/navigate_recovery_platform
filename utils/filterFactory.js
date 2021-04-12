@@ -20,8 +20,6 @@ const filterFactory = (filter_data, control) => {
     filter_options: options,
     important,
   } = filter_data;
-  console.log(name);
-  console.log(options);
   options = Array.from(options);
 
   switch (type) {

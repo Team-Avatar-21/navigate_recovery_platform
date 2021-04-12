@@ -14,6 +14,16 @@ import makeField from "../utils/fieldFactory";
 import { useState } from "react";
 import { useResources } from "../components/ResourcesContext";
 
+const buildFiltersObject = (filters_raw, resources) => {
+  return filters_raw.map((filter, idx) => {
+    const filter_options = new Set();
+    resources.forEach((resource) => {
+      filter_options.add(resource[filter.filter_name]);
+    });
+    return { ...filter, filter_options };
+  });
+};
+
 const prepareSet = (values) => {
   let set = ``;
   Object.keys(values).forEach((attr) => {
@@ -60,22 +70,29 @@ export default function EditResourceModel({
   const { control, handleSubmit } = useForm({
     defaultValues: default_values(),
   });
+
   if (!open) {
     return <></>;
   }
   const onSubmit = (data) => {
     setLoading(true);
+    const edited_data = data;
+    console.log(data);
     console.log(auth.authState.tokenResult.token);
     fetch(
       UPDATE_RESOURCES(data, attrs, resource.id),
       auth.authState.tokenResult.token
     )
       .then((data) => {
-        console.log(data);
+        console.log(edited_data);
         setLoading(false);
         res.dispatch({
           type: "update",
           value: data.update_resources_new_by_pk,
+        });
+        res.dispatch({
+          type: "update_filters",
+          value: { new: edited_data, old: resource },
         });
       })
       .catch((err) => {

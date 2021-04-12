@@ -9,7 +9,6 @@ import ResourcesComp from "../components/ResourcesComp";
 import Filters from "../components/Filters";
 import { useResources } from "./../components/ResourcesContext";
 import { fetchAllRes } from "../utils/graphql/graphqlHelper";
-// import { createContext, useContext } from "react";
 
 /**
  * Displays page with resources and filters
@@ -113,7 +112,6 @@ export default function Resources() {
     const token = auth.authState.tokenResult.token;
     const { filters_new: fs } = await fetch(GET_ALL_FILTERS, token);
     // setFiltersState(fs);
-
     let attrs = fs.map((filter) => {
       const {
         filter_name: attribute_name,

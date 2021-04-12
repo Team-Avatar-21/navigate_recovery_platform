@@ -12,6 +12,16 @@ import { useResources } from "../components/ResourcesContext";
  * TODO: refactor component to resue in remove_resource, edit resources, and resources pages.
  */
 
+const buildFiltersObject = (filters_raw, resources) => {
+  return filters_raw.map((filter, idx) => {
+    const filter_options = new Set();
+    resources.forEach((resource) => {
+      filter_options.add(resource[filter.filter_name]);
+    });
+    return { ...filter, filter_options };
+  });
+};
+
 const parseAttrsForGraphQL = (attributes) => {
   let attrs = "";
   attributes.forEach((element) => {
