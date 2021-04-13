@@ -8,6 +8,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import EditResourceModal from "../components/EditResourceModal";
 import { useResources } from "../components/ResourcesContext";
 import ViewResourceModal from "../components/ViewResourceModal";
+
 /**
  * Component that displays available resources
  * TODO: refactor component to resue in remove_resource, edit resources, and resources pages.
@@ -201,14 +202,6 @@ export default function ResourcesComp({
         attrs={attrs_names()}
       />
     </>
-    /*<>
-      <Grid container spacint={2}></Grid>
-      <Button variant="contained" color="primary" onClick={handleFetchRes}>
-        Get All Resources
-      </Button>
-      <Grid container spacing={3}>
-        {resComp}
-      </Grid>
-    </>*/
+
   );
 }

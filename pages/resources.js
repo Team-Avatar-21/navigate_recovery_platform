@@ -191,7 +191,6 @@ export default function Resources() {
   return (
     <Box className={classes.layout}>
       <Navbar />
-
       <Grid container justify="center" direction="column" spacing={4}>
         <Grid item>
           <Filters data={data} setFiltersState={handleSetFilters} />
