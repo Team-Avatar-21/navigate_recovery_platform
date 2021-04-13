@@ -1,9 +1,9 @@
-const admin = require("firebase-admin");
+import * as admin from "firebase-admin";
 const account = require("../../../navigate-recovery-platfom-firebase-adminsdk-r5iv4-ea3204fe8f.json");
 // // const private_key = process.env.FIREBASE_PK.replace(/\\n/g, "\n");
 // const serviceAccount = account;
 
-module.exports.createUser = (req, res) => {
+export default (req, res) => {
   if (admin.apps.length == 0) {
     admin.initializeApp({
       credential: admin.credential.cert(account),

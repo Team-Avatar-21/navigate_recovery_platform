@@ -11,6 +11,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useState, useContext } from "react";
 import { useForm, Controller } from "react-hook-form";
 import FormInput from "./FormInput";
+import filterFactory from "../utils/filterFactory";
+import { useResources } from "../components/ResourcesContext";
 
 /**
  * Component class that represents filters to filter through resources
@@ -29,14 +31,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Filters({ data, setFiltersState }) {
+  const resContext = useResources();
   //default values for filters are all filters empty
   //as long as all filters are of type SELECT
   const default_values = () => {
     const def_vals = {};
-    data?.forEach((attr) => (def_vals[attr.attribute_name] = ""));
+    data?.forEach((attr) => (def_vals[attr.filter_name] = ""));
     return def_vals;
   };
-
+  console.log(resContext);
   const { register, handleSubmit, watch, control, reset, getValues } = useForm({
     defaultValues: default_values(),
   });
@@ -59,60 +62,22 @@ export default function Filters({ data, setFiltersState }) {
     reset(default_values());
   };
 
-  /**
-   * parses filters data with inromation about filter names,
-   * values to build filters
-   */
-  const filters = data
-    ? data?.map((filter, idx) => {
-        const { filter_name, attribute_name } = filter;
-        const options = filter.filters || [];
-        const { filter_type } = options.length > 0 ? options[0] : "";
-        const newOpts = options.map((option) => ({
-          value: option.filter_option,
-          label: option.filter_option,
-        }));
-        return (
-          <FormControl className={classes.formControl} key={idx}>
-            <InputLabel>{filter_name}</InputLabel>
-            {filter_type == "SELECT" ? (
-              <Controller
-                name={attribute_name}
-                control={control}
-                defaultValue=""
-                as={
-                  <Select defaultValue="">
-                    {options.map((option, idx) => {
-                      const value = option.filter_option;
-                      return (
-                        <MenuItem name={attribute_name} key={idx} value={value}>
-                          {value}
-                        </MenuItem>
-                      );
-                    })}
-                    <MenuItem name={"none"} value={""}>
-                      None
-                    </MenuItem>
-                  </Select>
-                }
-              />
-            ) : (
-              ""
-            )}
-          </FormControl>
-        );
-      })
-    : [];
-
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={2} style={{ display: "flex", flexWrap: "wrap" }}>
-        {filters.map((filter, idx) => (
-          <Grid key={idx} item>
-            {filter}
-          </Grid>
-        ))}
+        {resContext.state.filters.map((filter_data, idx) => {
+          const filter = filterFactory(filter_data, control);
+          const { filter_name, filter_human_name } = filter_data;
+          return (
+            <Grid item key={idx}>
+              <FormControl className={classes.formControl}>
+                {filter}
+              </FormControl>
+            </Grid>
+          );
+        })}
       </Grid>
+
       <Button
         variant="contained"
         color="secondary"
