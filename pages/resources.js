@@ -96,10 +96,14 @@ export default function Resources() {
   const buildFiltersObject = (filters_raw, resources) => {
     return filters_raw.map((filter, idx) => {
       const filter_options = new Set();
+      const filter_value_obj = {};
       resources.forEach((resource) => {
+        const val = filter_value_obj[resource[filter.filter_name]] || 0;
+        const key = resource[filter.filter_name];
+        filter_value_obj[key] = val + 1;
         filter_options.add(resource[filter.filter_name]);
       });
-      return { ...filter, filter_options };
+      return { ...filter, filter_options, filter_value_obj };
     });
   };
   /**

@@ -10,27 +10,31 @@ function resourcesReducer(state, action) {
     case "update": {
       console.log("update");
       const filtered_res = state.resources.filter((res) => {
-        console.log(action.value.id);
         return action.value.id != res.id;
       });
       return { ...state, resources: [...filtered_res, action.value] };
     }
     case "set": {
       console.log("set");
-      console.log(action);
       return { ...state, resources: action.value };
     }
     case "update_filters": {
       const newFilters = [...state.filters];
       const newRes = action.value.new;
       const oldRes = action.value.old;
-      console.log("newres");
-      console.log(newRes);
+      console.log(state);
       newFilters.forEach((filter) => {
         const { filter_name } = filter;
-        if (newRes[filter_name]) {
+        if (newRes[filter_name] != oldRes[filter_name]) {
           filter.filter_options.add(newRes[filter_name]);
-          // filter.filter_options.delete(oldRes[filter_name]);
+          const newValCount = filter.filter_value_obj[newRes[filter_name]] || 0;
+          filter.filter_value_obj[newRes[filter_name]] = newValCount + 1;
+          filter.filter_value_obj[oldRes[filter_name]] -= 1;
+          const oldValCount = filter.filter_value_obj[oldRes[filter_name]];
+          if (oldValCount <= 0) {
+            filter.filter_options.delete(oldRes[filter_name]);
+            delete filter.filter_value_obj[oldRes[filter_name]];
+          }
         }
       });
 
