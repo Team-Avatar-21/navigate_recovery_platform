@@ -20,17 +20,33 @@ const GET_RESOURCES = (attributes) => {
 
   return query;
 };
+/**
+ * GraphQL query to fetch all filters with available options
+ * TODO: probably will have to rewrite schema to make it more efficient
+ */
+const GET_ALL_ATTRS = {
+  query: `query GET_ALL_FILTERS {
+    filters_new {
+      filter_human_name
+      filter_name
+      filter_type
+      important
+    }
+  }`,
+};
 
 const fetchAllRes = async (attrs, token) => {
   const attributes = attrs.map((obj) => obj.attribute_name);
 
   const d = await fetch(GET_RESOURCES(attributes), token);
 
-  // console.log(d);
-  // setResources(d.resources_new);
-  // res.dispatch({ type: "set", value: d.resources_new });
-  // setIsFetched(true);
   return await d.resources_new;
 };
 
-export { fetchAllRes };
+const fetchAllAttrs = async (token) => {
+  const attrs = fetch(GET_ALL_ATTRS, token);
+
+  return await attrs;
+};
+
+export { fetchAllRes, fetchAllAttrs };

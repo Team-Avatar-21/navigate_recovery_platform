@@ -122,6 +122,7 @@ export default function EditResourceModel({
           value: { new: edited_data, old: resource },
         });
         showSuccessMessage({ message: "Updated Successfully" });
+        setTimeout(() => setSuccessSnack({ open: false, message: "" }), 6000);
       })
       .catch((err) => {
         console.log(err);

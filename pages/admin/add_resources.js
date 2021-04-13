@@ -16,6 +16,8 @@ import {
 } from "@material-ui/core";
 import fetch from "../../utils/fetch";
 import useSWR from "swr";
+import { fetchAllAttrs } from "../../utils/graphql/graphqlHelper";
+import makeField from "../../utils/fieldFactory";
 
 /**
  * This Page shows logic and tools to add resources to the DB.
@@ -64,8 +66,8 @@ const ADD_RESOURCE = (attributes) => {
   });
   const mutation = {
     query: `mutation ADD_RESOURCES {
-        insert_Resources_one(object: {${object}}){
-          City
+      insert_resources_new_one(object: {${object}}){
+          city
         }
       }
     `,
@@ -86,7 +88,7 @@ export default function AddResources() {
   });
   const [attributes, setAttributes] = useState([]);
   const methods = useForm();
-  const { register, handleSubmit, reset } = methods;
+  const { register, control, handleSubmit, reset } = methods;
   const showSuccessMessage = (data) => {
     console.log("inside success");
     setSuccessSnack({ open: true, message: data.message });
@@ -101,30 +103,33 @@ export default function AddResources() {
     setErrorSnack({ oepn: false, message: "" });
   };
 
+  const attrs_names = (attrs) => {
+    const names_obj = {};
+    attrs?.forEach((obj) => {
+      const value = obj.filter_human_name;
+      const key = obj.filter_name;
+      names_obj[key] = {};
+      names_obj[key]["value"] = key;
+      names_obj[key]["name"] = value;
+      names_obj[key]["type"] = obj.filter_type;
+    });
+    return names_obj;
+  };
   /**
    * Method to fetch initial attributes
    * @param  {...any} args
    * @returns
    */
   const getData = async (...args) => {
-    const { Filters_Names: fs } = await fetch(
-      GET_ALL_FILTERS,
-      auth.authState.tokenResult.token
-    );
-    setAttributes(
-      fs.map((filter) => {
-        const { attribute_name, filter_name } = filter;
-        const obj = {
-          attribute_name: attribute_name,
-          filter_name: filter_name,
-        };
-        obj[attribute_name] = filter_name;
-        return obj;
-      })
-    );
+    const attrs = await fetchAllAttrs(auth.authState.tokenResult.token);
+    const fs = attrs.filters_new;
+    const attributes = attrs_names(fs);
+    setAttributes(attributes);
     return fs;
   };
-  const { data, err } = useSWR(GET_ALL_FILTERS, getData);
+  const { data, err } = useSWR(GET_ALL_FILTERS, getData, {
+    revalidateOnFocus: false,
+  });
 
   /**
    * handles add resource logic
@@ -162,37 +167,27 @@ export default function AddResources() {
                 "    "
               )}
             </Typography>
-            <FormProvider {...methods}>
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <Grid container direction="column">
-                  {attributes.map((filter, idx) => {
-                    return (
-                      <FormControl margin="normal" key={idx}>
-                        <FormInput
-                          required
-                          autoComplete="off"
-                          type="text"
-                          name={filter.attribute_name}
-                          label={filter.filter_name}
-                          id={filter.attribute_name}
-                        />
-                      </FormControl>
-                    );
-                  })}
-                  <FormControl margin="normal">
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      color="secondary"
-                      size="large"
-                    >
-                      Submit
-                    </Button>
-                    {successMessage ? <p>Success</p> : ""}
-                  </FormControl>
-                </Grid>
-              </form>
-            </FormProvider>
+            {/* <FormProvider {...methods}> */}
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <Grid container direction="column">
+                {Object.keys(attributes).map((attr, idx) => {
+                  const field = makeField("", attributes[attr], control);
+                  return <FormControl key={idx}>{field}</FormControl>;
+                })}
+                <FormControl margin="normal">
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="secondary"
+                    size="large"
+                  >
+                    Submit
+                  </Button>
+                  {successMessage ? <p>Success</p> : ""}
+                </FormControl>
+              </Grid>
+            </form>
+            {/* </FormProvider> */}
           </StyledPaper>
         </Grid>
       </Grid>
