@@ -136,6 +136,7 @@ export default function ResourcesComp({
   };
 
   const buildResourcesComp = (resources) => {
+    console.log(resources);
     return resources.map((resource, idx) => {
       return (
         <Grid item key={idx}>

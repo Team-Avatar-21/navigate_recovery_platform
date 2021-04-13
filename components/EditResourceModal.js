@@ -64,9 +64,9 @@ const UPDATE_RESOURCES = (values, attrs, id) => {
 const REMOVE_RESOURCE = (orgName) => {
   const mutation = {
     query: `mutation REMOVE_RESOURCE {
-        delete_Resources(where: {organizationName: {_eq: "${orgName}"}}) {
+        delete_resources_new(where: {name: {_eq: "${orgName}"}}) {
           returning {
-            organizationName
+            name
           }
         }
       }
@@ -104,14 +104,11 @@ export default function EditResourceModel({
   const onSubmit = (data) => {
     setLoading(true);
     const edited_data = data;
-    console.log(data);
-    console.log(auth.authState.tokenResult.token);
     fetch(
       UPDATE_RESOURCES(data, attrs, resource.id),
       auth.authState.tokenResult.token
     )
       .then((data) => {
-        console.log(edited_data);
         setLoading(false);
         res.dispatch({
           type: "update",
@@ -148,22 +145,22 @@ export default function EditResourceModel({
    * @param {String} orgName pk of the resource to be deleted from DB
    */
   const handleDelete = async (orgName) => {
-    setAwaitingResponse(true);
+    setLoading(true);
     fetch(REMOVE_RESOURCE(orgName), auth.authState.tokenResult.token)
-      .then((res) => {
-        setResources(
-          resources.filter((resource) => {
-            return resource.organizationName != orgName;
-          })
-        );
-        setAwaitingResponse(false);
+      .then((response) => {
+        const newRes = res.state.resources.filter((resource) => {
+          return resource.name != orgName;
+        });
+        res.dispatch({ type: "set", value: newRes });
+        setLoading(false);
         showSuccessMessage({
           message: `Resource: ${orgName} was successfully deleted.`,
         });
+        handleClose();
       })
       .catch((err) => {
-        handleOpenError(err[0]);
-        setAwaitingResponse(false);
+        handleOpenError(err);
+        setLoading(false);
       });
   };
 
@@ -192,7 +189,11 @@ export default function EditResourceModel({
           <Button type={"submit"} color="primary">
             Save
           </Button>
-          <Button onClick={handleClose} variant="contained" color="secondary">
+          <Button
+            onClick={() => handleDelete(resource.name)}
+            variant="contained"
+            color="secondary"
+          >
             Delete
           </Button>
           {loading ? "loading..." : ""}
