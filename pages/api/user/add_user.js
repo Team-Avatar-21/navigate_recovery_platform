@@ -1,5 +1,5 @@
-const admin = require("firebase-admin");
-const account = require("../../../navigate-recovery-platfom-firebase-adminsdk-r5iv4-ea3204fe8f.json");
+import * as admin from "firebase-admin";
+import account from "../../../navigate-recovery-platfom-firebase-adminsdk-r5iv4-ea3204fe8f.json";
 // // const private_key = process.env.FIREBASE_PK.replace(/\\n/g, "\n");
 // const serviceAccount = account;
 
