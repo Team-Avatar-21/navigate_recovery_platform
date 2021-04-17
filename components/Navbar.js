@@ -59,6 +59,10 @@ export default function Navbar() {
               </Button>
             </Link>
 
+
+            <Button className = {classes.title1} variant = "outlined" color = "secondary" href="/peer">Peer</Button>
+
+            <Button className = {classes.title1} variant = "outlined" color = "secondary"> {admin ? <Link href="/admin/add_users">Add Users</Link> : ""}</Button>
             <Link href="/resources">
               <Button
                 className={classes.title1}
@@ -81,6 +85,7 @@ export default function Navbar() {
             ) : (
               ""
             )}
+
           </Typography>
 
           <Typography variant="h10" className={classes.title}>
