@@ -39,6 +39,7 @@ const GET_RESOURCES = (attributes) => {
       resources_new {
         ${attrs}
         id
+        notes
       }
     }`,
   };
@@ -65,6 +66,7 @@ const GET_FILTERED_RESOURCES = (attributes, filters) => {
       resources_new(where:{${where}}){
         ${attrs}
         id
+        notes
       }
     }`,
   };
@@ -202,6 +204,5 @@ export default function ResourcesComp({
         attrs={attrs_names()}
       />
     </>
-
   );
 }

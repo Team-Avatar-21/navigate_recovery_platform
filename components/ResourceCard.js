@@ -1,8 +1,5 @@
 import { Grid, Typography, Button, Card, IconButton } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { Block } from "@material-ui/icons";
-import CardActionArea from '@material-ui/core/CardActionArea';
-import { shadows } from '@material-ui/system';
 import DeleteIcon from "@material-ui/icons/Delete";
 import { Block, Edit } from "@material-ui/icons";
 import CardActionArea from "@material-ui/core/CardActionArea";
@@ -12,11 +9,9 @@ import { useState } from "react";
 import { useAuth } from "../utils/auth";
 import fetch from "../utils/fetch";
 
-
-
 /**
-* Component class that represents a resource card
-*/
+ * Component class that represents a resource card
+ */
 const useStyles = makeStyles((theme) => {
   return {
     card: {
@@ -79,6 +74,5 @@ export default function ResourceCard({
         </Card>
       </Grid>
     </Grid>
-
   );
 }
