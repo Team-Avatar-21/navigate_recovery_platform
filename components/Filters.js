@@ -1,16 +1,11 @@
 import {
   Grid,
-  Select,
-  MenuItem,
   FormControl,
-  InputLabel,
-  Input,
   Button,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { useState, useContext } from "react";
-import { useForm, Controller } from "react-hook-form";
-import FormInput from "./FormInput";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import filterFactory from "../utils/filterFactory";
 import { useResources } from "../components/ResourcesContext";
 

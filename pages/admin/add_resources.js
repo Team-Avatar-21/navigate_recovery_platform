@@ -1,9 +1,7 @@
 import { useState } from "react";
-import { useForm, FormProvider } from "react-hook-form";
-import axios from "axios";
+import { useForm } from "react-hook-form";
 import { useAuth } from "../../utils/auth";
 import Navbar from "../../components/Navbar";
-import FormInput from "../../components/FormInput";
 import StyledPaper from "../../components/StyledPaper";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import {

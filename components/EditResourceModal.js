@@ -1,6 +1,5 @@
 import {
   Button,
-  TextField,
   Dialog,
   DialogActions,
   DialogContent,
@@ -9,7 +8,7 @@ import {
   Snackbar,
 } from "@material-ui/core";
 import { Alert, AlertTitle } from "@material-ui/lab";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import fetch from "../utils/fetch";
 import { useAuth } from "../utils/auth";
 import makeField from "../utils/fieldFactory";
@@ -17,7 +16,7 @@ import { useState } from "react";
 import { useResources } from "../components/ResourcesContext";
 
 const buildFiltersObject = (filters_raw, resources) => {
-  return filters_raw.map((filter, idx) => {
+  return filters_raw.map((filter, _) => {
     const filter_options = new Set();
     resources.forEach((resource) => {
       filter_options.add(resource[filter.filter_name]);
@@ -177,7 +176,7 @@ export default function EditResourceModel({
             To subscribe to this website, please enter your email address here.
             We will send updates occasionally.
           </DialogContentText>
-          {Object.keys(attrs).map((attr, idx) => {
+          {Object.keys(attrs).map((attr, _) => {
             const field = makeField(resource[attr], attrs[attr], control);
             return <div>{field}</div>;
           })}
