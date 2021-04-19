@@ -36,7 +36,9 @@ export default function Filters({ data, setFiltersState }) {
   //as long as all filters are of type SELECT
   const default_values = () => {
     const def_vals = {};
-    data?.forEach((attr) => (def_vals[attr.filter_name] = ""));
+    data?.forEach((attr) => {
+      if (attr.filter_type !== "select") def_vals[attr.filter_name] = "";
+    });
     return def_vals;
   };
   console.log(resContext);

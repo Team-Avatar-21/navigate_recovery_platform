@@ -3,12 +3,14 @@ import {
   Select,
   MenuItem,
   FormControl,
+  TextField,
   InputLabel,
   Input,
   Button,
   Checkbox,
   FormControlLabel,
 } from "@material-ui/core";
+import { Autocomplete } from "@material-ui/lab";
 import { makeStyles } from "@material-ui/core/styles";
 import { Controller } from "react-hook-form";
 
@@ -21,6 +23,10 @@ const filterFactory = (filter_data, control) => {
     important,
   } = filter_data;
   options = Array.from(options);
+  options = options.map((option) => {
+    return { name: String(option), value: String(option) };
+  });
+  options.push({ name: "None", value: "" });
 
   switch (type) {
     case "select": {
@@ -41,24 +47,34 @@ const filterFactory = (filter_data, control) => {
 const makeSelect = (options, name, human_name, control) => {
   return (
     <>
-      <InputLabel>{human_name}</InputLabel>
+      {/* <InputLabel>{human_name}</InputLabel> */}
       <Controller
         name={name}
         control={control}
-        defaultValue=""
+        defaultValue={{ name: "None", value: "" }}
+        onChange={([, data]) => data}
         as={
-          <Select defaultValue="">
-            {options.map((option, idx) => {
-              return (
-                <MenuItem name={name} value={option} key={idx}>
-                  {option}
-                </MenuItem>
-              );
-            })}
-            <MenuItem name={name} value="">
-              None
-            </MenuItem>
-          </Select>
+          <Autocomplete
+            options={options}
+            getOptionLabel={(option) => {
+              return option.name;
+            }}
+            renderInput={(params) => (
+              <TextField {...params} label={name} variant="outlined" />
+            )}
+          />
+          // <Select defaultValue="">
+          //   {options.map((option, idx) => {
+          //     return (
+          //       <MenuItem name={name} value={option} key={idx}>
+          //         {option}
+          //       </MenuItem>
+          //     );
+          //   })}
+          //   <MenuItem name={name} value="">
+          //     None
+          //   </MenuItem>
+          // </Select>
         }
       />
     </>
