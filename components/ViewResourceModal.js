@@ -6,7 +6,6 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@material-ui/core";
-import makeField from "../utils/fieldFactory";
 
 export default function ViewResourceModal({
   resource,

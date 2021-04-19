@@ -1,20 +1,12 @@
 import {
-    Typography,
-    Select,
-    Container,
     Grid,
-    Button,
-    TextField,
-    FormControl,
-    MenuItem,
-    InputLabel,
     Box,
   } from "@material-ui/core";
   import Navbar from "../../components/Navbar";
   import { useAuth } from "../../utils/auth";
   import useSWR from "swr";
   import fetch from "../../utils/fetch";
-  import { useEffect, useState } from "react";
+  import { useState } from "react";
   import { makeStyles } from "@material-ui/core/styles";
   import Link from "next/link";
 

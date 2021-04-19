@@ -3,7 +3,7 @@ import Navbar from "../components/Navbar";
 import { useAuth } from "../utils/auth";
 import useSWR from "swr";
 import fetch from "../utils/fetch";
-import { useState, createContext, useContext } from "react";
+import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import ResourcesComp from "../components/ResourcesComp";
 import Filters from "../components/Filters";

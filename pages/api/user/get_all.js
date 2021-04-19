@@ -1,5 +1,5 @@
 import * as admin from "firebase-admin";
-const account = require("../../../navigate-recovery-platfom-firebase-adminsdk-r5iv4-ea3204fe8f.json");
+import account from "../../../navigate-recovery-platfom-firebase-adminsdk-r5iv4-ea3204fe8f.json";
 
 export default async (req, res) => {
   if (admin.apps.length == 0) {
