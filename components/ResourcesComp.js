@@ -57,9 +57,16 @@ const GET_FILTERED_RESOURCES = (attributes, filters) => {
   if (Object.keys(filters).length == 0) return filters;
   let attrs = parseAttrsForGraphQL(attributes);
   let where = "";
-  console.log(filters);
   Object.keys(filters).forEach((filter) => {
-    if (filters[filter]) where += `${filter}: {_eq: "${filters[filter]}"},`;
+    console.log(filters);
+    if (typeof filters[filter] === "object") {
+      console.log("filters[filter] is object");
+      if (filters[filter]?.value) {
+        where += `${filter}: {_eq: "${filters[filter].value}"},`;
+      }
+    } else if (filters[filter]) {
+      where += `${filter}: {_eq: "${filters[filter]}"},`;
+    }
   });
   const query = {
     query: `query GET_FILTERED_RESOURCES{
@@ -139,8 +146,15 @@ export default function ResourcesComp({
   };
 
   const buildResourcesComp = (resources) => {
-    console.log(resources);
-    return resources.map((resource, idx) => {
+    const new_res = resources.sort((a, b) => {
+      a = a.name;
+      b = b.name;
+      if (a === b) {
+        return 0;
+      }
+      return a > b ? 1 : -1;
+    });
+    return new_res.map((resource, idx) => {
       return (
         <Grid item key={idx}>
           <ResourceCard
@@ -173,7 +187,6 @@ export default function ResourcesComp({
       auth.authState.tokenResult.token
     )
       .then((de) => {
-        // console.log(de);
         setResources(de.resources_new);
         res.dispatch({ type: "set", value: de.resources_new });
       })
@@ -188,6 +201,7 @@ export default function ResourcesComp({
       <Button variant="contained" color="primary" onClick={handleFetchRes}>
         Get All Resources
       </Button>
+      <span>Found: {res?.state.resources.length}</span>
       <Grid container spacing={3}>
         {resComp}
       </Grid>

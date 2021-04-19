@@ -6,7 +6,7 @@ export default function FormInput(props) {
   const { name, label } = props;
   return (
     <Controller
-      as={TextField}
+      render={(props) => <TextField {...props} />}
       variant="outlined"
       name={name}
       label={label}

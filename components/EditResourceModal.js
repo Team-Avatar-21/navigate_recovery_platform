@@ -106,6 +106,7 @@ export default function EditResourceModel({
   }
   const onSubmit = (data) => {
     setLoading(true);
+    console.log();
     const edited_data = data;
     fetch(
       UPDATE_RESOURCES(data, attrs, resource.id),
@@ -189,15 +190,16 @@ export default function EditResourceModel({
               name={"notes"}
               control={control}
               defaultValue={resource.notes}
-              as={
+              render={(props) => (
                 <TextField
+                  {...props}
                   label={"Notes"}
                   margin="dense"
                   fullWidth
                   multiline
                   rows={5}
                 />
-              }
+              )}
             />
           </div>
         </DialogContent>

@@ -35,7 +35,6 @@ const useStyles = makeStyles((theme) => ({
   signupButton: {
     marginLeft: "300px",
   },
-
 }));
 
 export default function Navbar() {
@@ -43,11 +42,10 @@ export default function Navbar() {
   const auth = useAuth();
   const admin = auth?.authState?.tokenResult?.claims?.admin;
   return (
-
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h10">
+          <Typography>
             <Link href="/">
               <Button
                 className={classes.title1}
@@ -59,10 +57,23 @@ export default function Navbar() {
               </Button>
             </Link>
 
+            <Button
+              className={classes.title1}
+              variant="outlined"
+              color="secondary"
+              href="/peer"
+            >
+              Peer
+            </Button>
 
-            <Button className = {classes.title1} variant = "outlined" color = "secondary" href="/peer">Peer</Button>
-
-            <Button className = {classes.title1} variant = "outlined" color = "secondary"> {admin ? <Link href="/admin/add_users">Add Users</Link> : ""}</Button>
+            <Button
+              className={classes.title1}
+              variant="outlined"
+              color="secondary"
+            >
+              {" "}
+              {admin ? <Link href="/admin/add_users">Add Users</Link> : ""}
+            </Button>
             <Link href="/resources">
               <Button
                 className={classes.title1}
@@ -85,19 +96,29 @@ export default function Navbar() {
             ) : (
               ""
             )}
-
           </Typography>
 
-          <Typography variant="h10" className={classes.title}>
+          <Typography className={classes.title}>
             {auth?.user ? (
               <>
                 <span>{auth.user.email}</span>{" "}
-                <Button variant = "outlined" color = "secondary" onClick={() => auth.signout()}>Logout</Button>
-
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  onClick={() => auth.signout()}
+                >
+                  Logout
+                </Button>
               </>
             ) : (
-              <> 
-                <Button className = {classes.signupButton} variant = "outlined" color = "secondary"><Link href="/auth/signin">Signin</Link> </Button>
+              <>
+                <Button
+                  className={classes.signupButton}
+                  variant="outlined"
+                  color="secondary"
+                >
+                  <Link href="/auth/signin">Signin</Link>{" "}
+                </Button>
               </>
             )}
           </Typography>

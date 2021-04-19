@@ -37,13 +37,19 @@ export default function Filters({ data, setFiltersState }) {
   const default_values = () => {
     const def_vals = {};
     data?.forEach((attr) => {
-      if (attr.filter_type !== "select") def_vals[attr.filter_name] = "";
+      if (attr.filter_type === "select")
+        def_vals[attr.filter_name] = { name: "None", value: "" };
+      else {
+        def_vals[attr.filter_name] = "";
+      }
     });
+    console.log(def_vals);
     return def_vals;
   };
-  console.log(resContext);
+  const defaultValues = default_values();
+  // console.log(resContext);
   const { register, handleSubmit, watch, control, reset, getValues } = useForm({
-    defaultValues: default_values(),
+    defaultValues,
   });
 
   const [filterState, setFilterState] = useState(default_values());
@@ -56,12 +62,13 @@ export default function Filters({ data, setFiltersState }) {
    * @param {Object} data of the current form state
    */
   const onSubmit = (data) => {
+    console.log(data);
     setFiltersState(data);
   };
 
   const resetFilters = () => {
     setFiltersState(default_values());
-    reset(default_values());
+    reset(defaultValues);
   };
 
   return (
