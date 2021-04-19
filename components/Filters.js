@@ -25,9 +25,6 @@ const useStyles = makeStyles((theme) => ({
   selectEmpty: {
     marginTop: theme.spacing(2),
   },
-  layout: {
-    margin: "10px",
-  },
 }));
 
 export default function Filters({ data, setFiltersState }) {

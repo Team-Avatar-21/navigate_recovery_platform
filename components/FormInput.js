@@ -6,11 +6,10 @@ export default function FormInput(props) {
   const { name, label } = props;
   return (
     <Controller
-      render={(props) => <TextField {...props} />}
       variant="outlined"
       name={name}
-      label={label}
       defaultValue=""
+      render={(props) => <TextField {...props} label={label} />}
       control={control}
       {...props}
     />

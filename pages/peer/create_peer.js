@@ -105,17 +105,85 @@ export default function AddPeer() {
             <FormProvider {...methods}>
               <form onSubmit={handleSubmit(onSubmit)}>
                 <Grid container direction="column">
-                <FormControl margin="normal">
-                    <FormInput required autoComplete="off" type="text" id="first_name" name="first_name" label="First Name"/>  
-                    <FormInput required autoComplete="off" type="text" id="last_name" name="last_name" label="Last Name"/>
-                    <FormInput autoComplete="off" type="text" id="nick_name" name="nick_name" label="Nick Name"/>
-                    <FormInput autoComplete="off" type="text" id="peer_number" name="peer_number" label="Phone"/>
-                    <FormInput autoComplete="off" type="text" id="peer_email" name="peer_email" label="Email"/>
-                    <FormInput autoComplete="off" type="text" id="emergency_name" name="emergency_name" label="Emergency Contact"/>
-                    <FormInput autoComplete="off" type="text" id="emergency_number" name="emergency_number" label="Emergency Phone"/>
-                    <FormInput autoComplete="off" type="text" id="notes" name="notes" label="Notes"/>
-                </FormControl>
-                <FormControl margin="normal">
+                  <FormControl margin="dense">
+                    <FormInput
+                      required
+                      autoComplete="off"
+                      type="text"
+                      id="first_name"
+                      name="first_name"
+                      label="First Name"
+                    />
+                  </FormControl>
+
+                  <FormControl margin="dense">
+                    <FormInput
+                      required
+                      autoComplete="off"
+                      type="text"
+                      id="last_name"
+                      name="last_name"
+                      label="Last Name"
+                    />
+                  </FormControl>
+
+                  <FormControl margin="dense">
+                    <FormInput
+                      autoComplete="off"
+                      type="text"
+                      id="nick_name"
+                      name="nick_name"
+                      label="Nick Name"
+                    />
+                  </FormControl>
+                  <FormControl margin="dense">
+                    <FormInput
+                      autoComplete="off"
+                      type="text"
+                      id="peer_number"
+                      name="peer_number"
+                      label="Phone"
+                    />
+                  </FormControl>
+
+                  <FormControl margin="dense">
+                    <FormInput
+                      autoComplete="off"
+                      type="text"
+                      id="peer_email"
+                      name="peer_email"
+                      label="Email"
+                    />
+                  </FormControl>
+                  <FormControl margin="dense">
+                    <FormInput
+                      autoComplete="off"
+                      type="text"
+                      id="emergency_name"
+                      name="emergency_name"
+                      label="Emergency Contact"
+                    />
+                  </FormControl>
+                  <FormControl margin="dense">
+                    <FormInput
+                      autoComplete="off"
+                      type="text"
+                      id="emergency_number"
+                      name="emergency_number"
+                      label="Emergency Phone"
+                    />
+                  </FormControl>
+                  <FormControl margin="dense">
+                    <FormInput
+                      autoComplete="off"
+                      type="text"
+                      id="notes"
+                      name="notes"
+                      label="Notes"
+                    />
+                  </FormControl>
+
+                  <FormControl margin="normal">
                     <Button
                       type="submit"
                       variant="contained"

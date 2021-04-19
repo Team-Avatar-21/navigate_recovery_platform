@@ -57,14 +57,15 @@ export default function Navbar() {
               </Button>
             </Link>
 
-            <Button
-              className={classes.title1}
-              variant="outlined"
-              color="secondary"
-              href="/peer"
-            >
-              Peer
-            </Button>
+            <Link href="/peer">
+              <Button
+                className={classes.title1}
+                variant="outlined"
+                color="secondary"
+              >
+                Peer
+              </Button>
+            </Link>
 
             <Link href="/resources">
               <Button

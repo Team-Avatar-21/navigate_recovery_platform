@@ -80,8 +80,11 @@ const useStyles = makeStyles((theme) => ({
   selectEmpty: {
     marginTop: theme.spacing(2),
   },
-  layout: {
-    margin: "10px",
+  container: {
+    padding: "1rem",
+  },
+  item: {
+    padding: "1rem",
   },
 }));
 
@@ -189,13 +192,18 @@ export default function Resources() {
   //   setResources(d.Resources);
   // };
   return (
-    <Box className={classes.layout}>
+    <Box>
       <Navbar />
-      <Grid container justify="center" direction="column" spacing={4}>
-        <Grid item>
+      <Grid
+        className={classes.container}
+        container
+        justify="center"
+        direction="column"
+      >
+        <Grid item className={classes.item}>
           <Filters data={data} setFiltersState={handleSetFilters} />
         </Grid>
-        <Grid item>
+        <Grid item className={classes.item}>
           <ResourcesComp
             attrs_data={data}
             attrs={attributes}
