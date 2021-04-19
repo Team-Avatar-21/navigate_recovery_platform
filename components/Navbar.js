@@ -1,21 +1,10 @@
-import { useState } from "react";
 import { useAuth } from "../utils/auth";
 import Link from "next/link";
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Container from "@material-ui/core/Container";
-import Grid from "@material-ui/core/Grid";
-
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,7 +23,8 @@ const useStyles = makeStyles((theme) => ({
   },
   signupButton: {
     marginLeft: "300px",
-  }
+  },
+
 }));
 
 export default function Navbar() {
@@ -42,29 +32,38 @@ export default function Navbar() {
   const auth = useAuth();
   const admin = auth?.authState?.tokenResult?.claims?.admin;
   return (
-    <div className = {classes.root}>
-      <AppBar position = "static">
+
+    <div className={classes.root}>
+      <AppBar position="static">
         <Toolbar>
           <Typography variant="h10">
-            <Button className = {classes.title1} variant = "outlined" color = "secondary" href="/"> Main </Button>
-            
+            <Link href="/">
+              <Button
+                className={classes.title1}
+                variant="outlined"
+                color="secondary"
+              >
+                {" "}
+                Main{" "}
+              </Button>
+            </Link>
+
             <Button className = {classes.title1} variant = "outlined" color = "secondary" href="/resources">Resources</Button>
 
             <Button className = {classes.title1} variant = "outlined" color = "secondary" href="/peer">Peer</Button>
 
             <Button className = {classes.title1} variant = "outlined" color = "secondary"> {admin ? <Link href="/admin">Admin</Link> : ""}</Button>
           </Typography>
-          
 
           <Typography variant="h10" className={classes.title}>
             {auth?.user ? (
               <>
                 <span>{auth.user.email}</span>{" "}
                 <Button variant = "outlined" color = "secondary" onClick={() => auth.signout()}>Logout</Button>
+
               </>
             ) : (
-              <>
-                {/* <Link href="/auth/signup">Signup</Link> */}
+              <> 
                 <Button className = {classes.signupButton} variant = "outlined" color = "secondary"><Link href="/auth/signin">Signin</Link> </Button>
               </>
             )}

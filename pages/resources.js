@@ -1,24 +1,14 @@
-import {
-  Typography,
-  Select,
-  Container,
-  Grid,
-  Button,
-  TextField,
-  FormControl,
-  MenuItem,
-  InputLabel,
-  Box,
-} from "@material-ui/core";
+import { Grid, Box, CircularProgress, Typography } from "@material-ui/core";
 import Navbar from "../components/Navbar";
 import { useAuth } from "../utils/auth";
 import useSWR from "swr";
 import fetch from "../utils/fetch";
-import { useEffect, useState } from "react";
+import { useState, createContext, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import ResourcesComp from "../components/ResourcesComp";
 import Filters from "../components/Filters";
-import { createContext, useContext } from "react";
+import { useResources } from "./../components/ResourcesContext";
+import { fetchAllRes } from "../utils/graphql/graphqlHelper";
 
 /**
  * Displays page with resources and filters
@@ -29,13 +19,14 @@ import { createContext, useContext } from "react";
  * TODO: probably will have to rewrite schema to make it more efficient
  */
 const GET_ALL_FILTERS = {
-  query: `query AllFilters {
-    Filters_Names {
-      attribute_name
+  query: `query GET_ALL_FILTERS {
+    filters_new {
+      filter_human_name
       filter_name
-      filters {
-        filter_option
-        filter_type
+      filter_type
+      important
+      filter_options {
+        option_value
       }
     }
   }`,
@@ -97,10 +88,24 @@ const useStyles = makeStyles((theme) => ({
 export default function Resources() {
   const classes = useStyles();
   const auth = useAuth();
+  const resContext = useResources();
   const [filtersState, setFiltersState] = useState({});
   const [attributes, setAttributes] = useState([]);
   const [filteredRes, setFilteredRes] = useState([]);
 
+  const buildFiltersObject = (filters_raw, resources) => {
+    return filters_raw.map((filter, idx) => {
+      const filter_options = new Set();
+      const filter_value_obj = {};
+      resources.forEach((resource) => {
+        const val = filter_value_obj[resource[filter.filter_name]] || 0;
+        const key = resource[filter.filter_name];
+        filter_value_obj[key] = val + 1;
+        filter_options.add(resource[filter.filter_name]);
+      });
+      return { ...filter, filter_options, filter_value_obj };
+    });
+  };
   /**
    * Method that fetches all filter values from the DB
    * also sets attributes based of the filters
@@ -108,29 +113,60 @@ export default function Resources() {
    * @returns {Object} response object from GraphQL endpoint
    */
   const getData = async (...args) => {
-    const { Filters_Names: fs } = await fetch(
-      GET_ALL_FILTERS,
-      auth.authState.tokenResult.token
-    );
+    const token = auth.authState.tokenResult.token;
+    const { filters_new: fs } = await fetch(GET_ALL_FILTERS, token);
     // setFiltersState(fs);
-
-    setAttributes(
-      fs.map((filter) => {
-        const { attribute_name, filter_name } = filter;
-        const obj = {
-          attribute_name: attribute_name,
-          filter_name: filter_name,
-        };
-        obj[attribute_name] = filter_name;
-        return obj;
-      })
-    );
+    let attrs = fs.map((filter) => {
+      const {
+        filter_name: attribute_name,
+        filter_human_name: filter_name,
+      } = filter;
+      const obj = {
+        attribute_name: attribute_name,
+        filter_name: filter_name,
+      };
+      obj[attribute_name] = filter_name;
+      return obj;
+    });
+    setAttributes(attrs);
+    let res = await fetchAllRes(attrs, token);
+    resContext.dispatch({
+      type: "set_filters",
+      value: buildFiltersObject(fs, res),
+    });
+    resContext.dispatch({
+      type: "set",
+      value: res,
+    });
+    console.log(fs);
     return fs;
   };
-  const { data, error } = useSWR(GET_ALL_FILTERS, getData);
+  const { data, error, isValidating } = useSWR(GET_ALL_FILTERS, getData, {
+    revalidateOnFocus: false,
+  });
 
   if (!auth.user) {
     return "access deined";
+  }
+  if (isValidating) {
+    return (
+      <>
+        <Navbar />
+        <Grid container alignItems={"center"} justify={"center"}>
+          <Grid
+            item
+            container
+            justify="center"
+            alignItems="center"
+            direction="column"
+            style={{ margin: "5rem" }}
+          >
+            <Typography variant="h3">Loading resources ...</Typography>
+            <CircularProgress size={"60px"} />
+          </Grid>
+        </Grid>
+      </>
+    );
   }
 
   const handleSetFilters = (data) => {
@@ -152,17 +188,16 @@ export default function Resources() {
   //   console.log(d);
   //   setResources(d.Resources);
   // };
-
   return (
     <Box className={classes.layout}>
       <Navbar />
       <Grid container justify="center" direction="column" spacing={4}>
-        
         <Grid item>
           <Filters data={data} setFiltersState={handleSetFilters} />
         </Grid>
         <Grid item>
           <ResourcesComp
+            attrs_data={data}
             attrs={attributes}
             filters={filtersState}
             filteredRes={filteredRes}

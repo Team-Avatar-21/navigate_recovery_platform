@@ -2,13 +2,27 @@ import { Typography, Button, Grid, Container } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import fetch from "../utils/fetch";
 import { useAuth } from "../utils/auth";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import ResourceCard from "../components/ResourceCard";
+import EditIcon from "@material-ui/icons/Edit";
+import EditResourceModal from "../components/EditResourceModal";
+import { useResources } from "../components/ResourcesContext";
+import ViewResourceModal from "../components/ViewResourceModal";
 
 /**
  * Component that displays available resources
  * TODO: refactor component to resue in remove_resource, edit resources, and resources pages.
  */
+
+const buildFiltersObject = (filters_raw, resources) => {
+  return filters_raw.map((filter, idx) => {
+    const filter_options = new Set();
+    resources.forEach((resource) => {
+      filter_options.add(resource[filter.filter_name]);
+    });
+    return { ...filter, filter_options };
+  });
+};
 
 const parseAttrsForGraphQL = (attributes) => {
   let attrs = "";
@@ -21,9 +35,10 @@ const parseAttrsForGraphQL = (attributes) => {
 const GET_RESOURCES = (attributes) => {
   let attrs = parseAttrsForGraphQL(attributes);
   const query = {
-    query: `query AllFilters {
-      Resources {
+    query: `query GET_ALL_RESROUCES {
+      resources_new {
         ${attrs}
+        id
       }
     }`,
   };
@@ -41,13 +56,15 @@ const GET_FILTERED_RESOURCES = (attributes, filters) => {
   if (Object.keys(filters).length == 0) return filters;
   let attrs = parseAttrsForGraphQL(attributes);
   let where = "";
+  console.log(filters);
   Object.keys(filters).forEach((filter) => {
     if (filters[filter]) where += `${filter}: {_eq: "${filters[filter]}"},`;
   });
   const query = {
     query: `query GET_FILTERED_RESOURCES{
-      Resources(where:{${where}}){
+      resources_new(where:{${where}}){
         ${attrs}
+        id
       }
     }`,
   };
@@ -55,25 +72,41 @@ const GET_FILTERED_RESOURCES = (attributes, filters) => {
 };
 
 export default function ResourcesComp({
-  attrs: attributes_obj_arr,
+  attrs,
   filters,
   filteredRes,
+  attrs_data,
 }) {
   const auth = useAuth();
+  const admin = auth.authState.tokenResult.claims.admin;
+  const res = useResources();
   const [resources, setResources] = useState(filteredRes);
   const [isFetched, setIsFetched] = useState(false);
+  const [editingResource, setEditingResource] = useState("");
+  const [open, setOpen] = useState(false);
+  const [openViewModal, setOpenViewModal] = useState(false);
+  const [viewingResource, setViewingResource] = useState("");
 
   // gets all resources in the db
   const handleFetchRes = async () => {
-    const attributes = attributes_obj_arr.map((obj) => obj.attribute_name);
+    const attributes = attrs.map((obj) => obj.attribute_name);
     const d = await fetch(
       GET_RESOURCES(attributes),
       auth.authState.tokenResult.token
     );
-    setResources(d.Resources);
+    // console.log(d);
+    setResources(d.resources_new);
+    res.dispatch({ type: "set", value: d.resources_new });
     setIsFetched(true);
   };
 
+  const handleCloseDialog = () => {
+    setOpen(false);
+  };
+  const handleCloseViewModal = () => {
+    setOpenViewModal(false);
+  };
+  // console.log(attrs);
   /**
    * Helps to fetch resources from the db when filters state gets updated.
    */
@@ -84,19 +117,36 @@ export default function ResourcesComp({
   // i.e. inPerson : "in Person"
   const attrs_names = () => {
     const names_obj = {};
-    attributes_obj_arr.forEach((obj) => {
-      const key = obj.attribute_name;
-      const value = obj.filter_name;
-      names_obj[key] = value;
+    res.state.filters.forEach((obj) => {
+      const value = obj.filter_human_name;
+      const key = obj.filter_name;
+      names_obj[key] = {};
+      names_obj[key]["value"] = key;
+      names_obj[key]["name"] = value;
+      names_obj[key]["type"] = obj.filter_type;
     });
     return names_obj;
   };
+  const onEdit = (resource) => {
+    setEditingResource(resource);
+    setOpen(true);
+  };
+  const onView = (resource) => {
+    setViewingResource(resource);
+    setOpenViewModal(true);
+  };
 
   const buildResourcesComp = (resources) => {
+    console.log(resources);
     return resources.map((resource, idx) => {
       return (
         <Grid item key={idx}>
-          <ResourceCard resources={resource} attrs={attrs_names()} />
+          <ResourceCard
+            resource={resource}
+            onEdit={admin ? onEdit : undefined}
+            attrs={attrs_names()}
+            onView={onView}
+          />
         </Grid>
       );
     });
@@ -104,7 +154,7 @@ export default function ResourcesComp({
 
   //creates an array of resource cards
 
-  let resComp = buildResourcesComp(resources);
+  let resComp = buildResourcesComp(res.state.resources);
 
   if (!resources.length && isFetched) {
     resComp = <Grid item>No Resources</Grid>;
@@ -115,14 +165,15 @@ export default function ResourcesComp({
    * current filter state
    */
   const handleFetchFilteredRes = async () => {
-    const attributes = attributes_obj_arr.map((obj) => obj.attribute_name);
+    const attributes = attrs.map((obj) => obj.attribute_name);
     const d = await fetch(
       GET_FILTERED_RESOURCES(attributes, filters),
       auth.authState.tokenResult.token
     )
       .then((de) => {
         // console.log(de);
-        setResources(de.Resources);
+        setResources(de.resources_new);
+        res.dispatch({ type: "set", value: de.resources_new });
       })
       .catch((err) => {
         console.log(err);
@@ -132,22 +183,25 @@ export default function ResourcesComp({
 
   return (
     <>
-
       <Button variant="contained" color="primary" onClick={handleFetchRes}>
         Get All Resources
       </Button>
       <Grid container spacing={3}>
         {resComp}
       </Grid>
+      <EditResourceModal
+        resource={editingResource}
+        attrs={attrs_names()}
+        open={open}
+        handleClose={handleCloseDialog}
+      />
+      <ViewResourceModal
+        resource={viewingResource}
+        open={openViewModal}
+        handleClose={handleCloseViewModal}
+        attrs={attrs_names()}
+      />
     </>
-    /*<>
-      <Grid container spacint={2}></Grid>
-      <Button variant="contained" color="primary" onClick={handleFetchRes}>
-        Get All Resources
-      </Button>
-      <Grid container spacing={3}>
-        {resComp}
-      </Grid>
-    </>*/
+
   );
 }
