@@ -1,6 +1,7 @@
 // import * as React from "react";
 import { ProvideAuth } from "../utils/auth";
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
+import { CssBaseline } from "@material-ui/core";
 import { ResourcesProvider } from "../components/ResourcesContext";
 
 //navigate recovery colors: Yellow #f1e70d || rgb(241,231,13)
@@ -25,11 +26,11 @@ function App({ Component, pageProps }) {
     <MuiThemeProvider theme={theme}>
       <ProvideAuth>
         <ResourcesProvider>
+          <CssBaseline />
           <Component {...pageProps} />
         </ResourcesProvider>
       </ProvideAuth>
     </MuiThemeProvider>
-    
   );
 }
 export default App;

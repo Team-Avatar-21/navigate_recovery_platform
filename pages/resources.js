@@ -80,8 +80,11 @@ const useStyles = makeStyles((theme) => ({
   selectEmpty: {
     marginTop: theme.spacing(2),
   },
-  layout: {
-    margin: "10px",
+  container: {
+    padding: "1rem",
+  },
+  item: {
+    padding: "1rem",
   },
 }));
 
@@ -171,31 +174,23 @@ export default function Resources() {
 
   const handleSetFilters = (data) => {
     setFiltersState(data);
-    // const attrs = attributes.map((obj) => obj.attribute_name);
-    // const d = await fetch(
-    //   GET_FILTERED_RESOURCES(attrs, filtersState),
-    //   auth.authState.tokenResult.token
-    // );
-    // console.log(d);
-    // setFilteredRes(d.Resources);
   };
-  // const handleFetchFilteredRes = async () => {
-  //   const attributes = attributes_obj_arr.map((obj) => obj.attribute_name);
-  //   const d = await fetch(
-  //     GET_FILTERED_RESOURCES(attributes, filters),
-  //     auth.authState.tokenResult.token
-  //   );
-  //   console.log(d);
-  //   setResources(d.Resources);
-  // };
+
   return (
-    <Box className={classes.layout}>
+    <Box>
       <Navbar />
-      <Grid container justify="center" direction="column" spacing={4}>
-        <Grid item>
-          <Filters data={data} setFiltersState={handleSetFilters} />
+      <Grid
+        className={classes.container}
+        container
+        justify="center"
+        direction="column"
+      >
+        <Grid item container className={classes.item} justify="center">
+          <Grid item>
+            <Filters data={data} setFiltersState={handleSetFilters} />
+          </Grid>
         </Grid>
-        <Grid item>
+        <Grid item className={classes.item}>
           <ResourcesComp
             attrs_data={data}
             attrs={attributes}

@@ -3,7 +3,7 @@ const account = require("../../../navigate-recovery-platfom-firebase-adminsdk-r5
 // // const private_key = process.env.FIREBASE_PK.replace(/\\n/g, "\n");
 // const serviceAccount = account;
 
-module.exports.createSuperUser = (req, res) => {
+export default (req, res) => {
   if (admin.apps.length == 0) {
     admin.initializeApp({
       credential: admin.credential.cert(account),

@@ -36,6 +36,7 @@ export default function ViewResourceModal({
             </p>
           );
         })}
+        <p>Notes: {resource.notes}</p>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} color="primary">

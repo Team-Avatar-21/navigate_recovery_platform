@@ -3,12 +3,14 @@ import {
   Select,
   MenuItem,
   FormControl,
+  TextField,
   InputLabel,
   Input,
   Button,
   Checkbox,
   FormControlLabel,
 } from "@material-ui/core";
+import { Autocomplete } from "@material-ui/lab";
 import { makeStyles } from "@material-ui/core/styles";
 import { Controller } from "react-hook-form";
 
@@ -21,6 +23,12 @@ const filterFactory = (filter_data, control) => {
     important,
   } = filter_data;
   options = Array.from(options);
+  options = options.map((option) => {
+    return { name: String(option), value: String(option) };
+    // return String(option);
+  });
+  options.push({ name: "None", value: "" });
+  // options.push("None");
 
   switch (type) {
     case "select": {
@@ -40,28 +48,27 @@ const filterFactory = (filter_data, control) => {
 
 const makeSelect = (options, name, human_name, control) => {
   return (
-    <>
-      <InputLabel>{human_name}</InputLabel>
-      <Controller
-        name={name}
-        control={control}
-        defaultValue=""
-        as={
-          <Select defaultValue="">
-            {options.map((option, idx) => {
-              return (
-                <MenuItem name={name} value={option} key={idx}>
-                  {option}
-                </MenuItem>
-              );
-            })}
-            <MenuItem name={name} value="">
-              None
-            </MenuItem>
-          </Select>
-        }
-      />
-    </>
+    <Controller
+      render={({ onChange, ...props }) => {
+        return (
+          <Autocomplete
+            autoHighlight
+            options={options}
+            getOptionLabel={(option) => option.value}
+            getOptionSelected={(option, value) => option.name === value.name}
+            renderOption={(option) => <span>{option.name}</span>}
+            renderInput={(params) => (
+              <TextField {...params} label={human_name} />
+            )}
+            onChange={(e, data) => onChange(data)}
+            {...props}
+          />
+        );
+      }}
+      onChange={([, data]) => data.name}
+      name={name}
+      control={control}
+    />
   );
 };
 
@@ -72,20 +79,24 @@ const makeBooleanSelect = (options, name, human_name, control) => {
       <Controller
         name={name}
         control={control}
-        as={
-          <Select defaultValue="">
+        render={(props) => (
+          <Select defaultValue="" {...props}>
             {options.map((option, idx) => {
+              if (option.value === "") {
+                return (
+                  <MenuItem name={name} value="" key={idx}>
+                    N/A
+                  </MenuItem>
+                );
+              }
               return (
-                <MenuItem name={name} value={String(option)} key={idx}>
-                  {option ? "Yes" : "No"}
+                <MenuItem name={name} value={option.name} key={idx}>
+                  {option.name === "true" ? "Yes" : "No"}
                 </MenuItem>
               );
             })}
-            <MenuItem name={name} value="">
-              N/A
-            </MenuItem>
           </Select>
-        }
+        )}
       />
     </>
   );

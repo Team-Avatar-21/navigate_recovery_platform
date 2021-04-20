@@ -11,20 +11,8 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   menuButton: {
-    marginRight: theme.spacing(2),
+    margin: theme.spacing(1),
   },
-  title: {
-    paddingLeft: "750px",
-    flexGrow: 1,
-  },
-  title1: {
-    marginLeft: "5px",
-    marginRight: "10px",
-  },
-  signupButton: {
-    marginLeft: "300px",
-  },
-
 }));
 
 export default function Navbar() {
@@ -32,42 +20,84 @@ export default function Navbar() {
   const auth = useAuth();
   const admin = auth?.authState?.tokenResult?.claims?.admin;
   return (
-
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h10">
-            <Link href="/">
-              <Button
-                className={classes.title1}
-                variant="outlined"
-                color="secondary"
-              >
-                {" "}
-                Main{" "}
-              </Button>
-            </Link>
+          <Grid container justify="space-between">
+            <Grid item>
+              <Typography>
+                <Link href="/">
+                  <Button
+                    className={classes.menuButton}
+                    variant="outlined"
+                    color="secondary"
+                  >
+                    {" "}
+                    Main{" "}
+                  </Button>
+                </Link>
 
-            <Button className = {classes.title1} variant = "outlined" color = "secondary" href="/resources">Resources</Button>
+                <Link href="/peer">
+                  <Button
+                    className={classes.menuButton}
+                    variant="outlined"
+                    color="secondary"
+                  >
+                    Peer
+                  </Button>
+                </Link>
 
-            <Button className = {classes.title1} variant = "outlined" color = "secondary" href="/peer">Peer</Button>
-
-            <Button className = {classes.title1} variant = "outlined" color = "secondary"> {admin ? <Link href="/admin">Admin</Link> : ""}</Button>
-          </Typography>
-
-          <Typography variant="h10" className={classes.title}>
-            {auth?.user ? (
-              <>
-                <span>{auth.user.email}</span>{" "}
-                <Button variant = "outlined" color = "secondary" onClick={() => auth.signout()}>Logout</Button>
-
-              </>
-            ) : (
-              <> 
-                <Button className = {classes.signupButton} variant = "outlined" color = "secondary"><Link href="/auth/signin">Signin</Link> </Button>
-              </>
-            )}
-          </Typography>
+                <Link href="/resources">
+                  <Button
+                    className={classes.menuButton}
+                    variant="outlined"
+                    color="secondary"
+                  >
+                    Resources
+                  </Button>
+                </Link>
+                {admin ? (
+                  <Link href="/admin">
+                    <Button
+                      className={classes.menuButton}
+                      variant="outlined"
+                      color="secondary"
+                    >
+                      Admin
+                    </Button>
+                  </Link>
+                ) : (
+                  ""
+                )}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography className={classes.menuButton}>
+                {auth?.user ? (
+                  <>
+                    <span>{auth.user.email}</span>{" "}
+                    <Button
+                      variant="outlined"
+                      color="secondary"
+                      onClick={() => auth.signout()}
+                    >
+                      Logout
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      className={classes.menuButton}
+                      variant="outlined"
+                      color="secondary"
+                    >
+                      <Link href="/auth/signin">Signin</Link>{" "}
+                    </Button>
+                  </>
+                )}
+              </Typography>
+            </Grid>
+          </Grid>
         </Toolbar>
       </AppBar>
     </div>

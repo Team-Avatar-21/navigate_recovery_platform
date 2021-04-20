@@ -1,11 +1,15 @@
 import {
   Button,
+  FormControl,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
   Snackbar,
+  TextareaAutosize,
+  TextField,
+  InputLabel,
 } from "@material-ui/core";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import { useForm } from "react-hook-form";
@@ -49,6 +53,7 @@ const UPDATE_RESOURCES = (values, attrs, id) => {
       update_resources_new_by_pk(pk_columns: {id: ${id}}, _set: {${set}}) {
        ${attributes}
        id
+       notes
       }
     }`,
   };
@@ -102,6 +107,7 @@ export default function EditResourceModel({
   }
   const onSubmit = (data) => {
     setLoading(true);
+    console.log(data);
     const edited_data = data;
     fetch(
       UPDATE_RESOURCES(data, attrs, resource.id),
@@ -180,6 +186,23 @@ export default function EditResourceModel({
             const field = makeField(resource[attr], attrs[attr], control);
             return <div>{field}</div>;
           })}
+          <div>
+            <Controller
+              name={"notes"}
+              control={control}
+              defaultValue={resource.notes}
+              render={(props) => (
+                <TextField
+                  {...props}
+                  label={"Notes"}
+                  margin="dense"
+                  fullWidth
+                  multiline
+                  rows={5}
+                />
+              )}
+            />
+          </div>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
