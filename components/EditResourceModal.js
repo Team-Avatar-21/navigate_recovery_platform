@@ -53,6 +53,7 @@ const UPDATE_RESOURCES = (values, attrs, id) => {
       update_resources_new_by_pk(pk_columns: {id: ${id}}, _set: {${set}}) {
        ${attributes}
        id
+       notes
       }
     }`,
   };
@@ -106,7 +107,7 @@ export default function EditResourceModel({
   }
   const onSubmit = (data) => {
     setLoading(true);
-    console.log();
+    console.log(data);
     const edited_data = data;
     fetch(
       UPDATE_RESOURCES(data, attrs, resource.id),

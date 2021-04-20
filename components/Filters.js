@@ -20,10 +20,13 @@ import { useResources } from "../components/ResourcesContext";
 const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1),
-    minWidth: 200,
+    minWidth: 250,
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
+  },
+  filterButton: {
+    margin: "0.5rem",
   },
 }));
 
@@ -70,7 +73,7 @@ export default function Filters({ data, setFiltersState }) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Grid container spacing={2} style={{ display: "flex", flexWrap: "wrap" }}>
+      <Grid container spacing={2} flexwrap>
         {resContext.state.filters.map((filter_data, idx) => {
           const filter = filterFactory(filter_data, control);
           const { filter_name, filter_human_name } = filter_data;
@@ -89,10 +92,16 @@ export default function Filters({ data, setFiltersState }) {
         color="secondary"
         onClick={handleFetchFiltered}
         type="submit"
+        className={classes.filterButton}
       >
         Get Filtered Resources
       </Button>
-      <Button variant="contained" color="secondary" onClick={resetFilters}>
+      <Button
+        className={classes.filterButton}
+        variant="contained"
+        color="secondary"
+        onClick={resetFilters}
+      >
         Reset Filters
       </Button>
     </form>

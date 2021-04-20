@@ -198,11 +198,21 @@ export default function ResourcesComp({
 
   return (
     <>
-      <Button variant="contained" color="primary" onClick={handleFetchRes}>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleFetchRes}
+        style={{ marginLeft: "0.5rem" }}
+      >
         Get All Resources
       </Button>
-      <span>Found: {res?.state.resources.length}</span>
-      <Grid container spacing={3}>
+      <span> Found: {res?.state.resources.length}</span>
+      <Grid
+        container
+        spacing={3}
+        justify="space-around"
+        style={{ marginTop: "1rem" }}
+      >
         {resComp}
       </Grid>
       <EditResourceModal

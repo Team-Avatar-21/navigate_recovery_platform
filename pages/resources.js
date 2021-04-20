@@ -174,23 +174,8 @@ export default function Resources() {
 
   const handleSetFilters = (data) => {
     setFiltersState(data);
-    // const attrs = attributes.map((obj) => obj.attribute_name);
-    // const d = await fetch(
-    //   GET_FILTERED_RESOURCES(attrs, filtersState),
-    //   auth.authState.tokenResult.token
-    // );
-    // console.log(d);
-    // setFilteredRes(d.Resources);
   };
-  // const handleFetchFilteredRes = async () => {
-  //   const attributes = attributes_obj_arr.map((obj) => obj.attribute_name);
-  //   const d = await fetch(
-  //     GET_FILTERED_RESOURCES(attributes, filters),
-  //     auth.authState.tokenResult.token
-  //   );
-  //   console.log(d);
-  //   setResources(d.Resources);
-  // };
+
   return (
     <Box>
       <Navbar />
@@ -200,8 +185,10 @@ export default function Resources() {
         justify="center"
         direction="column"
       >
-        <Grid item className={classes.item}>
-          <Filters data={data} setFiltersState={handleSetFilters} />
+        <Grid item container className={classes.item} justify="center">
+          <Grid item>
+            <Filters data={data} setFiltersState={handleSetFilters} />
+          </Grid>
         </Grid>
         <Grid item className={classes.item}>
           <ResourcesComp

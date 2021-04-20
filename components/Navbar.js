@@ -22,18 +22,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  title: {
-    paddingLeft: "750px",
-    flexGrow: 1,
-  },
-  title1: {
-    marginLeft: "5px",
-    marginRight: "10px",
-  },
-  signupButton: {
-    marginLeft: "300px",
+    margin: theme.spacing(1),
   },
 }));
 
@@ -45,76 +34,81 @@ export default function Navbar() {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <Typography>
-            <Link href="/">
-              <Button
-                className={classes.title1}
-                variant="outlined"
-                color="secondary"
-              >
-                {" "}
-                Main{" "}
-              </Button>
-            </Link>
+          <Grid container justify="space-between">
+            <Grid item>
+              <Typography>
+                <Link href="/">
+                  <Button
+                    className={classes.menuButton}
+                    variant="outlined"
+                    color="secondary"
+                  >
+                    {" "}
+                    Main{" "}
+                  </Button>
+                </Link>
 
-            <Link href="/peer">
-              <Button
-                className={classes.title1}
-                variant="outlined"
-                color="secondary"
-              >
-                Peer
-              </Button>
-            </Link>
+                <Link href="/peer">
+                  <Button
+                    className={classes.menuButton}
+                    variant="outlined"
+                    color="secondary"
+                  >
+                    Peer
+                  </Button>
+                </Link>
 
-            <Link href="/resources">
-              <Button
-                className={classes.title1}
-                variant="outlined"
-                color="secondary"
-              >
-                Resources
-              </Button>
-            </Link>
-            {admin ? (
-              <Link href="/admin">
-                <Button
-                  className={classes.title1}
-                  variant="outlined"
-                  color="secondary"
-                >
-                  Admin
-                </Button>
-              </Link>
-            ) : (
-              ""
-            )}
-          </Typography>
-
-          <Typography className={classes.title}>
-            {auth?.user ? (
-              <>
-                <span>{auth.user.email}</span>{" "}
-                <Button
-                  variant="outlined"
-                  color="secondary"
-                  onClick={() => auth.signout()}
-                >
-                  Logout
-                </Button>
-              </>
-            ) : (
-              <>
-                <Button
-                  className={classes.signupButton}
-                  variant="outlined"
-                  color="secondary"
-                >
-                  <Link href="/auth/signin">Signin</Link>{" "}
-                </Button>
-              </>
-            )}
-          </Typography>
+                <Link href="/resources">
+                  <Button
+                    className={classes.menuButton}
+                    variant="outlined"
+                    color="secondary"
+                  >
+                    Resources
+                  </Button>
+                </Link>
+                {admin ? (
+                  <Link href="/admin">
+                    <Button
+                      className={classes.menuButton}
+                      variant="outlined"
+                      color="secondary"
+                    >
+                      Admin
+                    </Button>
+                  </Link>
+                ) : (
+                  ""
+                )}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography className={classes.menuButton}>
+                {auth?.user ? (
+                  <>
+                    <span>{auth.user.email}</span>{" "}
+                    <Button
+                      variant="outlined"
+                      color="secondary"
+                      onClick={() => auth.signout()}
+                    >
+                      Logout
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      className={classes.menuButton}
+                      variant="outlined"
+                      color="secondary"
+                    >
+                      <Link href="/auth/signin">Signin</Link>{" "}
+                    </Button>
+                  </>
+                )}
+              </Typography>
+            </Grid>
+          </Grid>
         </Toolbar>
       </AppBar>
     </div>

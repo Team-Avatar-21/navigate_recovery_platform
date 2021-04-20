@@ -24,9 +24,9 @@ const useStyles = makeStyles((theme) => {
       minHeight: "10vw",
     },
     gridContainer: {
-      paddingTop: "45px",
-      paddingLeft: "60px",
-      paddingRight: "25px",
+      // paddingTop: "45px",
+      // paddingLeft: "60px",
+      // paddingRight: "25px",
     },
   };
 });
@@ -54,7 +54,7 @@ export default function ResourceCard({
     );
   });
   return (
-    <Grid container spacing={4} className={classes.gridContainer}>
+    <Grid container className={classes.gridContainer}>
       <Grid item>
         <Card className={classes.card} variant="outlined">
           {cardData}

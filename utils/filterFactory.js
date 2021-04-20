@@ -52,6 +52,7 @@ const makeSelect = (options, name, human_name, control) => {
       render={({ onChange, ...props }) => {
         return (
           <Autocomplete
+            autoHighlight
             options={options}
             getOptionLabel={(option) => option.value}
             getOptionSelected={(option, value) => option.name === value.name}
