@@ -1,5 +1,5 @@
 import { useDebugValue, useState } from "react";
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm, FormProvider, Controller } from "react-hook-form";
 import axios from "axios";
 import { useAuth } from "../../utils/auth";
 import Navbar from "../../components/Navbar";
@@ -13,7 +13,9 @@ import {
   Button,
   CircularProgress,
   Snackbar,
+  Checkbox,
 } from "@material-ui/core";
+import fieldFactory from "../../utils/fieldFactory";
 
 export default function SignIn() {
   const auth = useAuth();
@@ -26,7 +28,7 @@ export default function SignIn() {
     message: "",
   });
   const methods = useForm();
-  const { register, handleSubmit, reset } = methods;
+  const { register, handleSubmit, reset, control } = methods;
   const showSuccessMessage = (data) => {
     console.log("inside success");
     setSuccessSnack({ open: true, message: data.message });
@@ -42,11 +44,16 @@ export default function SignIn() {
   };
 
   const onSubmit = (data) => {
-    const { email, password } = data; //{email:value,}
+    const { email, password, admin: isAdmin } = data;
     const displayName = data.name;
+
     setAwaitingResponse(true);
+    let link = "/api/user/add_user";
+    if (isAdmin) {
+      link = "/api/user/add_superuser";
+    }
     axios
-      .post("/api/user/add_user", {
+      .post(link, {
         email,
         password,
         displayName,
@@ -112,6 +119,18 @@ export default function SignIn() {
                       required
                     />
                   </FormControl>
+                  <FormControl margin="normal">
+                    {fieldFactory(
+                      false,
+                      {
+                        type: "boolean",
+                        value: "admin",
+                        name: "is Admin?",
+                      },
+                      control
+                    )}
+                  </FormControl>
+
                   <FormControl margin="normal">
                     <Button
                       type="submit"
