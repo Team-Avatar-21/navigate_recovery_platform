@@ -1,9 +1,9 @@
 import { DataGrid } from "@material-ui/data-grid";
 import axios from "axios";
-import { Typography, Button, Grid, Card } from "@material-ui/core";
+import { Button, Grid} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import useSWR from "swr";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAuth } from "../../utils/auth";
 import Navbar from "../../components/Navbar";
 
@@ -24,7 +24,7 @@ const columns = [
     headerName: "Status",
     width: 100,
     valueGetter: (params) => {
-      let { admin, coach, perr } = params.getValue("claims");
+      let { admin, coach, peer } = params.getValue("claims");
       if (admin) {
         return "admin";
       } else if (coach) {

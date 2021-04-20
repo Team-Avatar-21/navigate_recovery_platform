@@ -1,10 +1,8 @@
-import { Typography, Button, Grid, Container } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { Button, Grid } from "@material-ui/core";
 import fetch from "../utils/fetch";
 import { useAuth } from "../utils/auth";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import ResourceCard from "../components/ResourceCard";
-import EditIcon from "@material-ui/icons/Edit";
 import EditResourceModal from "../components/EditResourceModal";
 import { useResources } from "../components/ResourcesContext";
 import ViewResourceModal from "../components/ViewResourceModal";

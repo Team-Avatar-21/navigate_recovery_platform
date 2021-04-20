@@ -21,9 +21,6 @@ export default function AdminIndex() {
         <li>
           <Link href="/admin/add_resources">Add Resources</Link>
         </li>
-        <li>
-          <Link href="/admin/remove_resources">Remove Resources</Link>
-        </li>
       </ol>
     </>
   );
