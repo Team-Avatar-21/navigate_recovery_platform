@@ -15,11 +15,11 @@ import {
   InputLabel,
 } from "@material-ui/core";
 import { Alert, AlertTitle } from "@material-ui/lab";
-import { useForm, Controller, appendErrors, useWatch } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import fetch from "../utils/fetch";
 import { useAuth } from "../utils/auth";
 import makeField from "../utils/fieldFactory";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useResources } from "./ResourcesContext";
 import { ErrorMessage } from "@hookform/error-message";
 import axios from "axios";
@@ -84,7 +84,7 @@ const REMOVE_RESOURCE = (orgName) => {
   return mutation;
 };
 
-export default function AddResourceAttrModal({ open, handleClose, append }) {
+export default function AddResourceAttrModal({ open, handleClose }) {
   const auth = useAuth();
   const token = auth.authState.tokenResult.token;
   const [loading, setLoading] = useState(false);
@@ -93,38 +93,27 @@ export default function AddResourceAttrModal({ open, handleClose, append }) {
     open: false,
     message: "",
   });
-
   const {
     control,
     formState: { errors },
     handleSubmit,
-    reset,
   } = useForm();
 
-  const [filterType, setFilterType] = useState("select");
   if (!open) {
     return <></>;
   }
-  console.log(errors);
   const onSubmit = async (data) => {
     setLoading(true);
-    console.log(data);
     axios
       .post("/api/resources/", {
         data,
         token,
       })
       .then((res) => {
-        res?.data?.insert_filters_new?.returning[0]
-          ? append(res.data.insert_filters_new.returning[0])
-          : "";
         showSuccessMessage({ message: "Attribute Successfull Added" });
         setLoading(false);
-        reset();
-        setFilterType("select");
       })
       .catch((err) => {
-        console.log(err);
         handleOpenError(err.response.data[0]);
         setLoading(false);
       });
@@ -141,57 +130,6 @@ export default function AddResourceAttrModal({ open, handleClose, append }) {
   };
   const handleCloseError = () => {
     setErrorSnack({ oepn: false, message: "" });
-  };
-
-  const buildDefaultBasedOnFilterType = (type) => {
-    console.log("Type:" + type);
-    if (type == "select") {
-      return (
-        <Controller
-          name={"default_val"}
-          control={control}
-          defaultValue={""}
-          rules={{
-            required: {
-              value: true,
-              message: "Default value is required",
-            },
-          }}
-          render={(props) => (
-            <TextField
-              {...props}
-              required
-              label={"Default Value"}
-              margin="dense"
-              placeholder="default value"
-            />
-          )}
-        />
-      );
-    } else {
-      return (
-        <>
-          <InputLabel> Default Value</InputLabel>
-          <Controller
-            name={"default_val"}
-            control={control}
-            defaultValue={true}
-            // rules={{
-            //   required: {
-            //     value: true,
-            //     message: "Default value is required",
-            //   },
-            // }}
-            render={(props) => (
-              <Select {...props}>
-                <MenuItem value={true}>Yes</MenuItem>
-                <MenuItem value={false}>No</MenuItem>
-              </Select>
-            )}
-          />
-        </>
-      );
-    }
   };
   return (
     <Dialog
@@ -235,22 +173,13 @@ export default function AddResourceAttrModal({ open, handleClose, append }) {
               control={control}
               defaultValue={"select"}
               rules={{ required: true }}
-              render={({ onChange, ...props }) => {
-                return (
-                  <Select
-                    onChange={(e) => {
-                      console.log(e.target.value);
-                      setFilterType(e.target.value);
-                      onChange(e);
-                    }}
-                    {...props}
-                  >
-                    <MenuItem value={"select"}>Select</MenuItem>
-                    <MenuItem value={"checkbox"}>Checkbox</MenuItem>
-                    <MenuItem value={"boolean"}>Yes/No</MenuItem>
-                  </Select>
-                );
-              }}
+              render={(props) => (
+                <Select {...props}>
+                  <MenuItem value={"select"}>Select</MenuItem>
+                  <MenuItem value={"checkbox"}>Checkbox</MenuItem>
+                  <MenuItem value={"boolean"}>Yes/No</MenuItem>
+                </Select>
+              )}
             />
           </FormControl>
           <FormControl margin="dense">
@@ -302,7 +231,26 @@ export default function AddResourceAttrModal({ open, handleClose, append }) {
             </section>
           </FormControl>
           <FormControl margin="dense" fullWidth>
-            {buildDefaultBasedOnFilterType(filterType)}
+            <Controller
+              name={"default_val"}
+              control={control}
+              defaultValue={""}
+              rules={{
+                required: {
+                  value: true,
+                  message: "Default value is required",
+                },
+              }}
+              render={(props) => (
+                <TextField
+                  {...props}
+                  required
+                  label={"Default Value"}
+                  margin="dense"
+                  placeholder="default value"
+                />
+              )}
+            />
           </FormControl>
         </DialogContent>
         <DialogActions>

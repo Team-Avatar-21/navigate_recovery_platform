@@ -83,15 +83,7 @@ export default function EditResourceSchema() {
     revalidateOnFocus: false,
   });
   const onSubmit = (data) => {
-    axios
-      .put("/api/resources/", { attributes: data.attributes, token })
-      .then((res) => {
-        console.log("successfully updated");
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    console.log(data);
   };
   const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
     {
@@ -149,7 +141,7 @@ export default function EditResourceSchema() {
               />
               <label>Important Filter</label>
               <Controller
-                name={`attributes[${idx}].important`}
+                name={`attributes[${idx}]important`}
                 control={control}
                 defaultValue={filter.important}
                 render={(props) => (
@@ -160,16 +152,6 @@ export default function EditResourceSchema() {
                 )}
               />
             </span>
-            <Controller
-              name={`attributes[${idx}].filter_name`}
-              defaultValue={filter.filter_name}
-              control={control}
-            />
-            <Controller
-              name={`attributes[${idx}].id`}
-              defaultValue={filter.id}
-              control={control}
-            />
           </FormControl>
           <FormControl margin="dense"></FormControl>
           <Button onClick={() => handleDelete(filter, idx)}>Delete</Button>
@@ -183,9 +165,7 @@ export default function EditResourceSchema() {
 
   const handleDelete = (filter, idx) => {
     axios
-      .delete("/api/resources", {
-        data: { id: filter.id, token, filter_name: filter.filter_name },
-      })
+      .delete("/api/resources", { data: { id: filter.id, token } })
       .then((res) => {
         console.log(res);
         remove(idx);
@@ -237,11 +217,7 @@ export default function EditResourceSchema() {
                 </FormControl>
               </Grid>
             </form>
-            <AddResourceAttrModal
-              open={open}
-              append={append}
-              handleClose={handleClose}
-            />
+            <AddResourceAttrModal open={open} handleClose={handleClose} />
           </StyledPaper>
         </Grid>
       </Grid>
