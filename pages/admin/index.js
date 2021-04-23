@@ -21,6 +21,9 @@ export default function AdminIndex() {
         <li>
           <Link href="/admin/add_resources">Add Resources</Link>
         </li>
+        <li>
+          <Link href="/admin/edit_resource_schema">Edit Resource Skeleton</Link>
+        </li>
       </ol>
     </>
   );

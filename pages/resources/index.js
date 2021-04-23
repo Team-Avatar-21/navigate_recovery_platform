@@ -1,14 +1,14 @@
 import { Grid, Box, CircularProgress, Typography } from "@material-ui/core";
-import Navbar from "../components/Navbar";
-import { useAuth } from "../utils/auth";
+import Navbar from "../../components/Navbar";
+import { useAuth } from "../../utils/auth";
 import useSWR from "swr";
-import fetch from "../utils/fetch";
+import fetch from "../../utils/fetch";
 import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import ResourcesComp from "../components/ResourcesComp";
-import Filters from "../components/Filters";
-import { useResources } from "./../components/ResourcesContext";
-import { fetchAllRes } from "../utils/graphql/graphqlHelper";
+import ResourcesComp from "../../components/ResourcesComp";
+import Filters from "../../components/Filters";
+import { useResources } from "../../components/ResourcesContext";
+import { fetchAllRes } from "../../utils/graphql/graphqlHelper";
 
 /**
  * Displays page with resources and filters
@@ -25,9 +25,6 @@ const GET_ALL_FILTERS = {
       filter_name
       filter_type
       important
-      filter_options {
-        option_value
-      }
     }
   }`,
 };

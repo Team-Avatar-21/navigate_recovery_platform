@@ -31,6 +31,8 @@ const GET_ALL_ATTRS = {
       filter_name
       filter_type
       important
+      important_attr
+      id
     }
   }`,
 };
@@ -44,9 +46,9 @@ const fetchAllRes = async (attrs, token) => {
 };
 
 const fetchAllAttrs = async (token) => {
-  const attrs = fetch(GET_ALL_ATTRS, token);
+  const attrs = await fetch(GET_ALL_ATTRS, token);
 
-  return await attrs;
+  return await attrs.filters_new;
 };
 
-export { fetchAllRes, fetchAllAttrs };
+export { fetchAllRes, fetchAllAttrs, GET_ALL_ATTRS };

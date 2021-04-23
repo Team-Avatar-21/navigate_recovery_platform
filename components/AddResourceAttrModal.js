@@ -8,6 +8,9 @@ import {
   DialogTitle,
   Snackbar,
   TextareaAutosize,
+  Select,
+  Checkbox,
+  MenuItem,
   TextField,
   InputLabel,
 } from "@material-ui/core";
@@ -17,7 +20,9 @@ import fetch from "../utils/fetch";
 import { useAuth } from "../utils/auth";
 import makeField from "../utils/fieldFactory";
 import { useState } from "react";
-import { useResources } from "../components/ResourcesContext";
+import { useResources } from "./ResourcesContext";
+import { ErrorMessage } from "@hookform/error-message";
+import axios from "axios";
 
 const buildFiltersObject = (filters_raw, resources) => {
   return filters_raw.map((filter, _) => {
@@ -79,55 +84,37 @@ const REMOVE_RESOURCE = (orgName) => {
   return mutation;
 };
 
-export default function AddResourceAttrModal({
-  resource,
-  open,
-  handleClose,
-  attrs,
-}) {
-  const default_values = () => {
-    const defaults = {};
-    Object.keys(resource).forEach((attr) => (defaults[attr] = resource[attr]));
-    return defaults;
-  };
-  const res = useResources();
+export default function AddResourceAttrModal({ open, handleClose }) {
   const auth = useAuth();
+  const token = auth.authState.tokenResult.token;
   const [loading, setLoading] = useState(false);
   const [errorSnack, setErrorSnack] = useState({ open: false, message: "" });
   const [successSnack, setSuccessSnack] = useState({
     open: false,
     message: "",
   });
-  const { control, handleSubmit } = useForm({
-    defaultValues: default_values(),
-  });
+  const {
+    control,
+    formState: { errors },
+    handleSubmit,
+  } = useForm();
 
   if (!open) {
     return <></>;
   }
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     setLoading(true);
-    console.log(data);
-    const edited_data = data;
-    fetch(
-      UPDATE_RESOURCES(data, attrs, resource.id),
-      auth.authState.tokenResult.token
-    )
-      .then((data) => {
+    axios
+      .post("/api/resources/", {
+        data,
+        token,
+      })
+      .then((res) => {
+        showSuccessMessage({ message: "Attribute Successfull Added" });
         setLoading(false);
-        res.dispatch({
-          type: "update",
-          value: data.update_resources_new_by_pk,
-        });
-        res.dispatch({
-          type: "update_filters",
-          value: { new: edited_data, old: resource },
-        });
-        showSuccessMessage({ message: "Updated Successfully" });
-        setTimeout(() => setSuccessSnack({ open: false, message: "" }), 6000);
       })
       .catch((err) => {
-        console.log(err);
+        handleOpenError(err.response.data[0]);
         setLoading(false);
       });
   };
@@ -144,79 +131,134 @@ export default function AddResourceAttrModal({
   const handleCloseError = () => {
     setErrorSnack({ oepn: false, message: "" });
   };
-  /**
-   *  Deletes a resource from DB
-   * displays success/failure message respectively
-   * @param {String} orgName pk of the resource to be deleted from DB
-   */
-  const handleDelete = async (orgName) => {
-    setLoading(true);
-    fetch(REMOVE_RESOURCE(orgName), auth.authState.tokenResult.token)
-      .then((response) => {
-        const newRes = res.state.resources.filter((resource) => {
-          return resource.name != orgName;
-        });
-        res.dispatch({ type: "set", value: newRes });
-        setLoading(false);
-        showSuccessMessage({
-          message: `Resource: ${orgName} was successfully deleted.`,
-        });
-        handleClose();
-      })
-      .catch((err) => {
-        handleOpenError(err);
-        setLoading(false);
-      });
-  };
-
   return (
     <Dialog
       open={open}
       onClose={handleClose}
       aria-labelledby="form-dialog-title"
     >
-      <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+      <DialogTitle id="form-dialog-title">Add New Attribute</DialogTitle>
       <form onSubmit={handleSubmit(onSubmit)}>
         <DialogContent>
           <DialogContentText>
-            To subscribe to this website, please enter your email address here.
-            We will send updates occasionally.
+            Add a new attribute that you will be able to filter resources by.
           </DialogContentText>
-          {Object.keys(attrs).map((attr, _) => {
-            const field = makeField(resource[attr], attrs[attr], control);
-            return <div>{field}</div>;
-          })}
-          <div>
+          {/* <ErrorMessage errors={errors} name="singleErrorInput" />
+          <ErrorMessage
+            errors={errors}
+            name="singleErrorInput"
+            render={({ message }) => <p>{message}</p>}
+          /> */}
+          <FormControl margin="dense" fullWidth>
             <Controller
-              name={"notes"}
+              name={"filter_human_name"}
               control={control}
-              defaultValue={resource.notes}
+              defaultValue={""}
+              rules={{ required: true }}
               render={(props) => (
                 <TextField
                   {...props}
-                  label={"Notes"}
-                  margin="dense"
+                  label={"Name"}
                   fullWidth
-                  multiline
-                  rows={5}
+                  margin="dense"
+                  required
                 />
               )}
             />
-          </div>
+          </FormControl>
+          <FormControl margin="dense" fullWidth>
+            <InputLabel> Filter Type </InputLabel>
+            <Controller
+              name={"filter_type"}
+              control={control}
+              defaultValue={"select"}
+              rules={{ required: true }}
+              render={(props) => (
+                <Select {...props}>
+                  <MenuItem value={"select"}>Select</MenuItem>
+                  <MenuItem value={"checkbox"}>Checkbox</MenuItem>
+                  <MenuItem value={"boolean"}>Yes/No</MenuItem>
+                </Select>
+              )}
+            />
+          </FormControl>
+          <FormControl margin="dense">
+            <section>
+              <label>Important Filter</label>
+              <Controller
+                name={`important`}
+                control={control}
+                defaultValue={true}
+                render={(props) => (
+                  <Checkbox
+                    onChange={(e) => props.onChange(e.target.checked)}
+                    checked={props.value}
+                  />
+                )}
+              />
+            </section>
+          </FormControl>
+          <FormControl margin="dense">
+            <section>
+              <label>Important Attribute</label>
+              <Controller
+                name={`important_attr`}
+                control={control}
+                defaultValue={false}
+                render={(props) => (
+                  <Checkbox
+                    onChange={(e) => props.onChange(e.target.checked)}
+                    checked={props.value}
+                  />
+                )}
+              />
+            </section>
+          </FormControl>
+          <FormControl margin="dense">
+            <section>
+              <label>Nullable</label>
+              <Controller
+                name={`nullable`}
+                control={control}
+                defaultValue={false}
+                render={(props) => (
+                  <Checkbox
+                    onChange={(e) => props.onChange(e.target.checked)}
+                    checked={props.value}
+                  />
+                )}
+              />
+            </section>
+          </FormControl>
+          <FormControl margin="dense" fullWidth>
+            <Controller
+              name={"default_val"}
+              control={control}
+              defaultValue={""}
+              rules={{
+                required: {
+                  value: true,
+                  message: "Default value is required",
+                },
+              }}
+              render={(props) => (
+                <TextField
+                  {...props}
+                  required
+                  label={"Default Value"}
+                  margin="dense"
+                  placeholder="default value"
+                />
+              )}
+            />
+          </FormControl>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
           <Button type={"submit"} color="primary">
-            Save
-          </Button>
-          <Button
-            onClick={() => handleDelete(resource.name)}
-            variant="contained"
-            color="secondary"
-          >
-            Delete
+            Add
           </Button>
           {loading ? "loading..." : ""}
         </DialogActions>
