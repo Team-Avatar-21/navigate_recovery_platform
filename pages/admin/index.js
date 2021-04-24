@@ -24,6 +24,9 @@ export default function AdminIndex() {
         <li>
           <Link href="/admin/edit_resource_schema">Edit Resource Skeleton</Link>
         </li>
+        <li>
+          <Link href="/resources/usage">View Resource Usage</Link>
+        </li>
       </ol>
     </>
   );
