@@ -5,7 +5,7 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-
+import { Grid } from "@material-ui/core";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -71,31 +71,30 @@ export default function Navbar() {
                 )}
               </Typography>
             </Grid>
-            <Grid item>
-              <Typography className={classes.menuButton}>
-                {auth?.user ? (
-                  <>
-                    <span>{auth.user.email}</span>{" "}
-                    <Button
-                      variant="outlined"
-                      color="secondary"
-                      onClick={() => auth.signout()}
-                    >
-                      Logout
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <Button
-                      className={classes.menuButton}
-                      variant="outlined"
-                      color="secondary"
-                    >
-                      <Link href="/auth/signin">Signin</Link>{" "}
-                    </Button>
-                  </>
-                )}
-              </Typography>
+            <Grid item container xs={6} justify="center" alignItems="center">
+              {auth?.user ? (
+                <Grid item>
+                  <span>{auth.user.email}</span>{" "}
+                  <Button
+                    variant="outlined"
+                    color="secondary"
+                    onClick={() => auth.signout()}
+                  >
+                    Logout
+                  </Button>
+                </Grid>
+              ) : (
+                <Grid item>
+                  <Button
+                    className={classes.menuButton}
+                    variant="outlined"
+                    color="secondary"
+                  >
+                    <Link href="/auth/signin">Signin</Link>{" "}
+                  </Button>
+                </Grid>
+              )}
+              {/* </Typography> */}
             </Grid>
           </Grid>
         </Toolbar>

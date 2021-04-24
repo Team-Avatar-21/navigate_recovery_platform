@@ -6,6 +6,7 @@ import ResourceCard from "../components/ResourceCard";
 import EditResourceModal from "../components/EditResourceModal";
 import { useResources } from "../components/ResourcesContext";
 import ViewResourceModal from "../components/ViewResourceModal";
+import Link from "next/link";
 
 /**
  * Component that displays available resources
@@ -205,6 +206,16 @@ export default function ResourcesComp({
         Get All Resources
       </Button>
       <span> Found: {res?.state.resources.length}</span>
+      <Link href="/resources/usage">
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleFetchRes}
+          style={{ marginLeft: "0.5rem" }}
+        >
+          View Usage
+        </Button>
+      </Link>
       <Grid
         container
         spacing={3}
