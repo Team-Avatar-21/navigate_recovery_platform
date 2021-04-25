@@ -12,7 +12,7 @@ import {
   InputLabel,
 } from "@material-ui/core";
 import { Alert, AlertTitle } from "@material-ui/lab";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import fetch from "../utils/fetch";
 import { useAuth } from "../utils/auth";
 import makeField from "../utils/fieldFactory";
@@ -79,7 +79,7 @@ const REMOVE_RESOURCE = (orgName) => {
   return mutation;
 };
 
-export default function EditResourceModel({
+export default function AddResourceAttrModal({
   resource,
   open,
   handleClose,
