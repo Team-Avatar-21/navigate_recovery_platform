@@ -6,6 +6,8 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@material-ui/core";
+import { useState } from "react";
+import ReferPeerModal from "./ReferPeerModal";
 
 export default function ViewResourceModal({
   resource,
@@ -16,8 +18,15 @@ export default function ViewResourceModal({
   if (!open) {
     return <></>;
   }
-  console.log(resource);
-  console.log(attrs);
+  const [openPeer, setOpenPeer] = useState(false);
+
+  const handleClickOpenPeer = () => {
+    setOpenPeer(true);
+  };
+
+  const handleClosePeer = () => {
+    setOpenPeer(false);
+  };
   return (
     <Dialog
       open={open}
@@ -36,6 +45,7 @@ export default function ViewResourceModal({
             </p>
           );
         })}
+        <p>Notes: {resource.notes}</p>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} color="primary">
@@ -44,7 +54,20 @@ export default function ViewResourceModal({
         <Button onClick={handleClose} variant="contained" color="primary">
           Okay
         </Button>
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={handleClickOpenPeer}
+        >
+          Refer a Peer
+        </Button>
       </DialogActions>
+      <ReferPeerModal
+        id={resource.id}
+        name={resource.name}
+        open={openPeer}
+        handleClose={handleClosePeer}
+      />
     </Dialog>
   );
 }

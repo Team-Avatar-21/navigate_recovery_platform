@@ -15,13 +15,13 @@ import { useResources } from "../components/ResourcesContext";
 const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1),
-    minWidth: 200,
+    minWidth: 250,
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
   },
-  layout: {
-    margin: "10px",
+  filterButton: {
+    margin: "0.5rem",
   },
 }));
 
@@ -31,12 +31,20 @@ export default function Filters({ data, setFiltersState }) {
   //as long as all filters are of type SELECT
   const default_values = () => {
     const def_vals = {};
-    data?.forEach((attr) => (def_vals[attr.filter_name] = ""));
+    data?.forEach((attr) => {
+      if (attr.filter_type === "select")
+        def_vals[attr.filter_name] = { name: "None", value: "" };
+      else {
+        def_vals[attr.filter_name] = "";
+      }
+    });
+    console.log(def_vals);
     return def_vals;
   };
-  console.log(resContext);
+  const defaultValues = default_values();
+  // console.log(resContext);
   const { register, handleSubmit, watch, control, reset, getValues } = useForm({
-    defaultValues: default_values(),
+    defaultValues,
   });
 
   const [filterState, setFilterState] = useState(default_values());
@@ -49,17 +57,18 @@ export default function Filters({ data, setFiltersState }) {
    * @param {Object} data of the current form state
    */
   const onSubmit = (data) => {
+    console.log(data);
     setFiltersState(data);
   };
 
   const resetFilters = () => {
     setFiltersState(default_values());
-    reset(default_values());
+    reset(defaultValues);
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Grid container spacing={2} style={{ display: "flex", flexWrap: "wrap" }}>
+      <Grid container spacing={2} flexwrap>
         {resContext.state.filters.map((filter_data, idx) => {
           const filter = filterFactory(filter_data, control);
           const { filter_name, filter_human_name } = filter_data;
@@ -78,10 +87,16 @@ export default function Filters({ data, setFiltersState }) {
         color="secondary"
         onClick={handleFetchFiltered}
         type="submit"
+        className={classes.filterButton}
       >
         Get Filtered Resources
       </Button>
-      <Button variant="contained" color="secondary" onClick={resetFilters}>
+      <Button
+        className={classes.filterButton}
+        variant="contained"
+        color="secondary"
+        onClick={resetFilters}
+      >
         Reset Filters
       </Button>
     </form>

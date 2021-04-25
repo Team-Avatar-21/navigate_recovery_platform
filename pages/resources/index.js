@@ -1,14 +1,14 @@
 import { Grid, Box, CircularProgress, Typography } from "@material-ui/core";
-import Navbar from "../components/Navbar";
-import { useAuth } from "../utils/auth";
+import Navbar from "../../components/Navbar";
+import { useAuth } from "../../utils/auth";
 import useSWR from "swr";
-import fetch from "../utils/fetch";
+import fetch from "../../utils/fetch";
 import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import ResourcesComp from "../components/ResourcesComp";
-import Filters from "../components/Filters";
-import { useResources } from "./../components/ResourcesContext";
-import { fetchAllRes } from "../utils/graphql/graphqlHelper";
+import ResourcesComp from "../../components/ResourcesComp";
+import Filters from "../../components/Filters";
+import { useResources } from "../../components/ResourcesContext";
+import { fetchAllRes } from "../../utils/graphql/graphqlHelper";
 
 /**
  * Displays page with resources and filters
@@ -25,9 +25,6 @@ const GET_ALL_FILTERS = {
       filter_name
       filter_type
       important
-      filter_options {
-        option_value
-      }
     }
   }`,
 };
@@ -80,8 +77,11 @@ const useStyles = makeStyles((theme) => ({
   selectEmpty: {
     marginTop: theme.spacing(2),
   },
-  layout: {
-    margin: "10px",
+  container: {
+    padding: "1rem",
+  },
+  item: {
+    padding: "1rem",
   },
 }));
 
@@ -171,31 +171,23 @@ export default function Resources() {
 
   const handleSetFilters = (data) => {
     setFiltersState(data);
-    // const attrs = attributes.map((obj) => obj.attribute_name);
-    // const d = await fetch(
-    //   GET_FILTERED_RESOURCES(attrs, filtersState),
-    //   auth.authState.tokenResult.token
-    // );
-    // console.log(d);
-    // setFilteredRes(d.Resources);
   };
-  // const handleFetchFilteredRes = async () => {
-  //   const attributes = attributes_obj_arr.map((obj) => obj.attribute_name);
-  //   const d = await fetch(
-  //     GET_FILTERED_RESOURCES(attributes, filters),
-  //     auth.authState.tokenResult.token
-  //   );
-  //   console.log(d);
-  //   setResources(d.Resources);
-  // };
+
   return (
-    <Box className={classes.layout}>
+    <Box>
       <Navbar />
-      <Grid container justify="center" direction="column" spacing={4}>
-        <Grid item>
-          <Filters data={data} setFiltersState={handleSetFilters} />
+      <Grid
+        className={classes.container}
+        container
+        justify="center"
+        direction="column"
+      >
+        <Grid item container className={classes.item} justify="center">
+          <Grid item>
+            <Filters data={data} setFiltersState={handleSetFilters} />
+          </Grid>
         </Grid>
-        <Grid item>
+        <Grid item className={classes.item}>
           <ResourcesComp
             attrs_data={data}
             attrs={attributes}

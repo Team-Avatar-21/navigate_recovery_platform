@@ -23,8 +23,9 @@ export default function makeField(value, attr_data, control) {
         control={control}
         name={attr_name}
         defaultValue={default_val}
-        as={
+        render={(props) => (
           <TextField
+            {...props}
             margin="dense"
             id={attr_name}
             label={name}
@@ -32,7 +33,7 @@ export default function makeField(value, attr_data, control) {
             // defaultValue={default_val}
             fullWidth
           />
-        }
+        )}
       />
     );
   };
@@ -44,12 +45,12 @@ export default function makeField(value, attr_data, control) {
           name={attr_name}
           control={control}
           defaultValue={default_val == null ? false : default_val}
-          as={
-            <Select>
+          render={(props) => (
+            <Select {...props}>
               <MenuItem value={true}>Yes</MenuItem>
               <MenuItem value={false}>No</MenuItem>
             </Select>
-          }
+          )}
         />
       </FormControl>
     );
