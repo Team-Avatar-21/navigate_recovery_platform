@@ -80,6 +80,10 @@ export default function PeerDetailTable({peer}) {
                     <td className={classes.label} >Notes</td>
                     <td className={classes.value}>{peer.notes}</td>
                 </tr>
+                <tr>
+                    <td className={classes.label} >Resource</td>
+                    <td className={classes.value}>{peer.resource_id}</td>
+                </tr>
             </table>
         );
     }
