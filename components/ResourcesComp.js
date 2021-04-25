@@ -7,11 +7,21 @@ import EditResourceModal from "../components/EditResourceModal";
 import { useResources } from "../components/ResourcesContext";
 import ViewResourceModal from "../components/ViewResourceModal";
 import Link from "next/link";
+import { makeStyles } from "@material-ui/core/styles";
 
 /**
  * Component that displays available resources
  * TODO: refactor component to resue in remove_resource, edit resources, and resources pages.
  */
+const useStyles = makeStyles({
+  root: {
+    margin: "auto",
+    width: "50%",
+    border: "3px solid yellow",
+    padding: "10px",
+    marginLeft: "315px",
+  }
+});
 
 const buildFiltersObject = (filters_raw, resources) => {
   return filters_raw.map((filter, idx) => {
@@ -85,6 +95,7 @@ export default function ResourcesComp({
   filteredRes,
   attrs_data,
 }) {
+  const classes = useStyles();
   const auth = useAuth();
   const admin = auth.authState.tokenResult.claims.admin;
   const res = useResources();
@@ -205,7 +216,7 @@ export default function ResourcesComp({
       >
         Get All Resources
       </Button>
-      <span> Found: {res?.state.resources.length}</span>
+      
       <Link href="/resources/usage">
         <Button
           variant="contained"
@@ -216,6 +227,7 @@ export default function ResourcesComp({
           View Usage
         </Button>
       </Link>
+      <hi className={classes.root}>Found: {res?.state.resources.length} Resources</hi>
       <Grid
         container
         spacing={3}

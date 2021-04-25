@@ -8,6 +8,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import filterFactory from "../utils/filterFactory";
 import { useResources } from "../components/ResourcesContext";
+import SwipeableTemporaryDrawer from "../components/SecondaryFilters";
 
 /**
  * Component class that represents filters to filter through resources
@@ -22,11 +23,29 @@ const useStyles = makeStyles((theme) => ({
   },
   filterButton: {
     margin: "0.5rem",
+    float: "left",
   },
 }));
 
+  
+
 export default function Filters({ data, setFiltersState }) {
+  const classes = useStyles();
+  //this finds which filters are important
   const resContext = useResources();
+  const non_important = []
+  const important = []
+
+  const findImportant = (filters) =>{
+    resContext.state.filters.map((filter_data)=>{
+      if (filter_data.important){
+        return important.push(filter_data)
+      }
+      return non_important.push(filter_data)
+    });
+    return[important,non-important];
+  };
+
   //default values for filters are all filters empty
   //as long as all filters are of type SELECT
   const default_values = () => {
@@ -42,13 +61,14 @@ export default function Filters({ data, setFiltersState }) {
     return def_vals;
   };
   const defaultValues = default_values();
+  console.log(findImportant);
   // console.log(resContext);
   const { register, handleSubmit, watch, control, reset, getValues } = useForm({
     defaultValues,
   });
 
   const [filterState, setFilterState] = useState(default_values());
-  const classes = useStyles();
+  
   const handleFetchFiltered = () => {};
 
   /**
@@ -99,6 +119,11 @@ export default function Filters({ data, setFiltersState }) {
       >
         Reset Filters
       </Button>
+
+      
+      <SwipeableTemporaryDrawer/>
+      
+      
     </form>
   );
 }
