@@ -120,9 +120,11 @@ export default function AddResources() {
    */
   const getData = async (...args) => {
     const attrs = await fetchAllAttrs(auth.authState.tokenResult.token);
-    const fs = attrs.filters_new;
+    const fs = attrs;
     const attributes = attrs_names(fs);
     setAttributes(attributes);
+    console.log("add_resources");
+    console.log(attrs);
     return fs;
   };
   const { data, err } = useSWR(GET_ALL_FILTERS, getData, {
