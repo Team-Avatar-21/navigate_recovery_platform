@@ -3,7 +3,6 @@ import {
   Typography,
   Select,
   Container,
-  Grid,
   Button,
   TextField,
   FormControl,
@@ -19,36 +18,6 @@ import { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Link from "next/link";
 import PeerDetailTable from "../../components/PeerDetailTable";
-
-
-/**
- * Displays page with resources and filters
- */
-
-/**
- * GraphQL query to fetch all filters with available options
- * TODO: probably will have to rewrite schema to make it more efficient
- */
-const GET_ALL_PEERS = {
-  query: `query GET_ALL_PEERS {
-        peer {
-          emergency_name
-          emergency_number
-          first_name
-          last_name
-          nick_name
-          notes
-          peer_email
-          peer_id
-          peer_number
-          resource_id
-        }
-        peer_visit {
-          peer_id
-          visit_ts
-        }
-      }`,
-};
 
 /**
  * Displays page with resources and filters
