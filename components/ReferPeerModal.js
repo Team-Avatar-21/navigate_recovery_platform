@@ -6,22 +6,55 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import { Alert, AlertTitle } from "@material-ui/lab";
+import { Snackbar } from "@material-ui/core";
 import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
 import { useAuth } from "../utils/auth";
+import { useState } from "react";
 
 export default function ReferPeerModal({ handleClose, open, id, name }) {
   const { handleSubmit, control } = useForm();
   const auth = useAuth();
   const token = auth?.authState?.tokenResult?.token;
+  const [loading, setLoading] = useState(false);
+  const [errorSnack, setErrorSnack] = useState({ open: false, message: "" });
+  const [successSnack, setSuccessSnack] = useState({
+    open: false,
+    message: "",
+  });
+
+  const showSuccessMessage = (data) => {
+    setSuccessSnack({ open: true, message: data.message });
+  };
+  const handleCloseSuccess = () => {
+    setSuccessSnack({ open: false, message: "" });
+  };
+  const handleOpenError = (message) => {
+    setErrorSnack({ open: true, message });
+  };
+  const handleCloseError = () => {
+    setErrorSnack({ oepn: false, message: "" });
+  };
+
   const onSubmit = (data) => {
+    setLoading(true);
     axios
       .post("/api/resources/refer", { ...data, token, id })
-      .then((res) => {})
+      .then((res) => {
+        setLoading(false);
+        showSuccessMessage({
+          message: "Peer-Resource record was succesfully created.",
+        });
+      })
       .catch((err) => {
-        console.log(err.response);
+        setLoading(false);
+        handleOpenError(
+          err?.response?.data?.message || "Error adding a Peer-Resource record"
+        );
       });
   };
+
   return (
     <div>
       <Dialog
@@ -84,6 +117,28 @@ export default function ReferPeerModal({ handleClose, open, id, name }) {
             </Button>
           </DialogActions>
         </form>
+        <Snackbar
+          open={errorSnack.open}
+          autoHideDuration={6000}
+          onClose={handleCloseError}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        >
+          <Alert onClose={handleCloseError} severity="error">
+            <AlertTitle>Error</AlertTitle>
+            {errorSnack.message}
+          </Alert>
+        </Snackbar>
+        <Snackbar
+          open={successSnack.open}
+          autoHideDuration={6000}
+          onClose={handleCloseSuccess}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        >
+          <Alert onClose={handleCloseSuccess} severity="success">
+            <AlertTitle>Success</AlertTitle>
+            {successSnack.message}
+          </Alert>
+        </Snackbar>
       </Dialog>
     </div>
   );

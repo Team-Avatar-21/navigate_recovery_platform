@@ -131,6 +131,56 @@ export default function AddResourceAttrModal({ open, handleClose }) {
   const handleCloseError = () => {
     setErrorSnack({ oepn: false, message: "" });
   };
+
+  const buildDefaultBasedOnFilterType = (type) => {
+    if (type == "select") {
+      return (
+        <Controller
+          name={"default_val"}
+          control={control}
+          defaultValue={""}
+          rules={{
+            required: {
+              value: true,
+              message: "Default value is required",
+            },
+          }}
+          render={(props) => (
+            <TextField
+              {...props}
+              required
+              label={"Default Value"}
+              margin="dense"
+              placeholder="default value"
+            />
+          )}
+        />
+      );
+    } else {
+      return (
+        <>
+          <InputLabel> Default Value</InputLabel>
+          <Controller
+            name={"default_val"}
+            control={control}
+            defaultValue={true}
+            // rules={{
+            //   required: {
+            //     value: true,
+            //     message: "Default value is required",
+            //   },
+            // }}
+            render={(props) => (
+              <Select {...props}>
+                <MenuItem value={true}>Yes</MenuItem>
+                <MenuItem value={false}>No</MenuItem>
+              </Select>
+            )}
+          />
+        </>
+      );
+    }
+  };
   return (
     <Dialog
       open={open}
@@ -180,6 +230,23 @@ export default function AddResourceAttrModal({ open, handleClose }) {
                   <MenuItem value={"boolean"}>Yes/No</MenuItem>
                 </Select>
               )}
+              // =======
+              //               render={({ onChange, ...props }) => {
+              //                 return (
+              //                   <Select
+              //                     onChange={(e) => {
+              //                       setFilterType(e.target.value);
+              //                       onChange(e);
+              //                     }}
+              //                     {...props}
+              //                   >
+              //                     <MenuItem value={"select"}>Select</MenuItem>
+              //                     <MenuItem value={"checkbox"}>Checkbox</MenuItem>
+              //                     <MenuItem value={"boolean"}>Yes/No</MenuItem>
+              //                   </Select>
+              //                 );
+              //               }}
+              // >>>>>>> 76aadcb71f857ada0e1b47c4615503938206eab4
             />
           </FormControl>
           <FormControl margin="dense">

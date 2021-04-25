@@ -83,7 +83,12 @@ export default function EditResourceSchema() {
     revalidateOnFocus: false,
   });
   const onSubmit = (data) => {
-    console.log(data);
+    axios
+      .put("/api/resources/", { attributes: data.attributes, token })
+      .then((res) => {})
+      .catch((err) => {
+        console.log(err);
+      });
   };
   const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
     {
@@ -167,7 +172,6 @@ export default function EditResourceSchema() {
     axios
       .delete("/api/resources", { data: { id: filter.id, token } })
       .then((res) => {
-        console.log(res);
         remove(idx);
       })
       .catch((err) => {

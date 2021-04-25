@@ -6,6 +6,7 @@ import ResourceCard from "../components/ResourceCard";
 import EditResourceModal from "../components/EditResourceModal";
 import { useResources } from "../components/ResourcesContext";
 import ViewResourceModal from "../components/ViewResourceModal";
+import Link from "next/link";
 
 /**
  * Component that displays available resources
@@ -56,9 +57,7 @@ const GET_FILTERED_RESOURCES = (attributes, filters) => {
   let attrs = parseAttrsForGraphQL(attributes);
   let where = "";
   Object.keys(filters).forEach((filter) => {
-    console.log(filters);
     if (typeof filters[filter] === "object") {
-      console.log("filters[filter] is object");
       if (filters[filter]?.value) {
         where += `${filter}: {_eq: "${filters[filter].value}"},`;
       }
@@ -101,7 +100,6 @@ export default function ResourcesComp({
       GET_RESOURCES(attributes),
       auth.authState.tokenResult.token
     );
-    // console.log(d);
     setResources(d.resources_new);
     res.dispatch({ type: "set", value: d.resources_new });
     setIsFetched(true);
@@ -113,7 +111,6 @@ export default function ResourcesComp({
   const handleCloseViewModal = () => {
     setOpenViewModal(false);
   };
-  // console.log(attrs);
   /**
    * Helps to fetch resources from the db when filters state gets updated.
    */
@@ -189,7 +186,6 @@ export default function ResourcesComp({
         res.dispatch({ type: "set", value: de.resources_new });
       })
       .catch((err) => {
-        console.log(err);
         setResources([]);
       });
   };
@@ -205,6 +201,16 @@ export default function ResourcesComp({
         Get All Resources
       </Button>
       <span> Found: {res?.state.resources.length}</span>
+      <Link href="/resources/usage">
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleFetchRes}
+          style={{ marginLeft: "0.5rem" }}
+        >
+          View Usage
+        </Button>
+      </Link>
       <Grid
         container
         spacing={3}
