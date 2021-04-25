@@ -88,7 +88,6 @@ export default function AddResources() {
   const methods = useForm();
   const { register, control, handleSubmit, reset } = methods;
   const showSuccessMessage = (data) => {
-    console.log("inside success");
     setSuccessSnack({ open: true, message: data.message });
   };
   const handleCloseSuccess = () => {
@@ -123,8 +122,6 @@ export default function AddResources() {
     const fs = attrs;
     const attributes = attrs_names(fs);
     setAttributes(attributes);
-    console.log("add_resources");
-    console.log(attrs);
     return fs;
   };
   const { data, err } = useSWR(GET_ALL_FILTERS, getData, {

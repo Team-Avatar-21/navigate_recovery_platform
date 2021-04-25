@@ -30,7 +30,6 @@ export default function SignIn() {
   const methods = useForm();
   const { register, handleSubmit, reset, control } = methods;
   const showSuccessMessage = (data) => {
-    console.log("inside success");
     setSuccessSnack({ open: true, message: data.message });
   };
   const handleCloseSuccess = () => {

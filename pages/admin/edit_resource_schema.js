@@ -85,10 +85,7 @@ export default function EditResourceSchema() {
   const onSubmit = (data) => {
     axios
       .put("/api/resources/", { attributes: data.attributes, token })
-      .then((res) => {
-        console.log("successfully updated");
-        console.log(res);
-      })
+      .then((res) => {})
       .catch((err) => {
         console.log(err);
       });
@@ -187,7 +184,6 @@ export default function EditResourceSchema() {
         data: { id: filter.id, token, filter_name: filter.filter_name },
       })
       .then((res) => {
-        console.log(res);
         remove(idx);
       })
       .catch((err) => {

@@ -52,7 +52,6 @@ export default function AddPeer() {
   const methods = useForm();
   const { register, handleSubmit, reset } = methods;
   const showSuccessMessage = (data) => {
-    console.log("inside success");
     setSuccessSnack({ open: true, message: data.message });
   };
   const handleCloseSuccess = () => {
