@@ -34,7 +34,6 @@ export default (req, res) => {
         peer: true,
       };
       await admin.auth().setCustomUserClaims(uid, customClaims);
-      // console.log(claimsReturn);/
       let updatedRecord = await admin.auth().getUserByEmail(email);
       res.send(updatedRecord);
     })

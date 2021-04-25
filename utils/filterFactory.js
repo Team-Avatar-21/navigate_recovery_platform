@@ -89,6 +89,10 @@ const makeBooleanSelect = (options, name, human_name, control) => {
                   </MenuItem>
                 );
               }
+
+              if (option.value == "null") {
+                return;
+              }
               return (
                 <MenuItem name={name} value={option.name} key={idx}>
                   {option.name === "true" ? "Yes" : "No"}

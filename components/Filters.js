@@ -1,8 +1,4 @@
-import {
-  Grid,
-  FormControl,
-  Button,
-} from "@material-ui/core";
+import { Grid, FormControl, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -38,11 +34,11 @@ export default function Filters({ data, setFiltersState }) {
         def_vals[attr.filter_name] = "";
       }
     });
-    console.log(def_vals);
+
     return def_vals;
   };
   const defaultValues = default_values();
-  // console.log(resContext);
+
   const { register, handleSubmit, watch, control, reset, getValues } = useForm({
     defaultValues,
   });
@@ -57,7 +53,6 @@ export default function Filters({ data, setFiltersState }) {
    * @param {Object} data of the current form state
    */
   const onSubmit = (data) => {
-    console.log(data);
     setFiltersState(data);
   };
 
@@ -68,7 +63,7 @@ export default function Filters({ data, setFiltersState }) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Grid container spacing={2} flexwrap>
+      <Grid container spacing={2}>
         {resContext.state.filters.map((filter_data, idx) => {
           const filter = filterFactory(filter_data, control);
           const { filter_name, filter_human_name } = filter_data;

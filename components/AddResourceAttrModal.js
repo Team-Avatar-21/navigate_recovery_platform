@@ -105,10 +105,9 @@ export default function AddResourceAttrModal({ open, handleClose, append }) {
   if (!open) {
     return <></>;
   }
-  console.log(errors);
+
   const onSubmit = async (data) => {
     setLoading(true);
-    console.log(data);
     axios
       .post("/api/resources/", {
         data,
@@ -124,7 +123,6 @@ export default function AddResourceAttrModal({ open, handleClose, append }) {
         setFilterType("select");
       })
       .catch((err) => {
-        console.log(err);
         handleOpenError(err.response.data[0]);
         setLoading(false);
       });
@@ -144,7 +142,6 @@ export default function AddResourceAttrModal({ open, handleClose, append }) {
   };
 
   const buildDefaultBasedOnFilterType = (type) => {
-    console.log("Type:" + type);
     if (type == "select") {
       return (
         <Controller
@@ -239,7 +236,6 @@ export default function AddResourceAttrModal({ open, handleClose, append }) {
                 return (
                   <Select
                     onChange={(e) => {
-                      console.log(e.target.value);
                       setFilterType(e.target.value);
                       onChange(e);
                     }}

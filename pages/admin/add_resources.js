@@ -88,7 +88,6 @@ export default function AddResources() {
   const methods = useForm();
   const { register, control, handleSubmit, reset } = methods;
   const showSuccessMessage = (data) => {
-    console.log("inside success");
     setSuccessSnack({ open: true, message: data.message });
   };
   const handleCloseSuccess = () => {
@@ -120,7 +119,7 @@ export default function AddResources() {
    */
   const getData = async (...args) => {
     const attrs = await fetchAllAttrs(auth.authState.tokenResult.token);
-    const fs = attrs.filters_new;
+    const fs = attrs;
     const attributes = attrs_names(fs);
     setAttributes(attributes);
     return fs;

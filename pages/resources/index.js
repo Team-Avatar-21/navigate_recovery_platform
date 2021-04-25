@@ -25,6 +25,7 @@ const GET_ALL_FILTERS = {
       filter_name
       filter_type
       important
+      important_attr
     }
   }`,
 };
@@ -115,7 +116,7 @@ export default function Resources() {
   const getData = async (...args) => {
     const token = auth.authState.tokenResult.token;
     const { filters_new: fs } = await fetch(GET_ALL_FILTERS, token);
-    // setFiltersState(fs);
+    console.log(fs);
     let attrs = fs.map((filter) => {
       const {
         filter_name: attribute_name,
@@ -138,7 +139,6 @@ export default function Resources() {
       type: "set",
       value: res,
     });
-    console.log(fs);
     return fs;
   };
   const { data, error, isValidating } = useSWR(GET_ALL_FILTERS, getData, {

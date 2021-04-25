@@ -17,7 +17,6 @@ export default (req, res) => {
     .verifyIdToken(token)
     .then((decodedToken) => {
       if (!decodedToken.admin) {
-        console.log("access denied");
         return res.status(400).json({ error: "access denied" });
       }
 

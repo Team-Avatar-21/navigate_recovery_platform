@@ -32,7 +32,7 @@ const REFER_PEER = (peer_id, id) => {
 
 export default async (req, res) => {
   const { id, peer_email: email, token } = req.body;
-  console.log(req.body);
+
   fetch(GET_PEER_ID_BY_EMAIL(email), token)
     .then(({ peer }) => {
       if (peer.length == 0) {
