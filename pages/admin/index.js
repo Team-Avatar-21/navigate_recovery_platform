@@ -1,8 +1,19 @@
 import { useAuth } from "../../utils/auth";
 import Navbar from "../../components/Navbar";
 import Link from "next/link";
+import { makeStyles } from "@material-ui/core/styles";
+import Button from "@material-ui/core/Button";
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    margin: theme.spacing(1),
+  },
+}));
 export default function AdminIndex() {
+  const classes = useStyles();
   const auth = useAuth();
   const admin = auth?.authState?.tokenResult?.claims?.admin;
   if (!admin) {
@@ -12,21 +23,56 @@ export default function AdminIndex() {
     <>
       <Navbar />
       <ol>
-        <li>
-          <Link href="/admin/add_users">Add Users</Link>
-        </li>
-        <li>
-          <Link href="/admin/remove_users">Remove Users</Link>
-        </li>
-        <li>
-          <Link href="/admin/add_resources">Add Resources</Link>
-        </li>
-        <li>
-          <Link href="/admin/edit_resource_schema">Edit Resource Skeleton</Link>
-        </li>
-        <li>
-          <Link href="/resources/usage">View Resource Usage</Link>
-        </li>
+        <Link href="/admin/add_users">
+          <Button
+            className={classes.menuButton}
+            variant="outlined"
+            color="primary"
+          >
+            Add Users
+          </Button>
+        </Link>
+
+        <Link href="/admin/remove_users">
+          <Button
+            className={classes.menuButton}
+            variant="outlined"
+            color="primary"
+          >
+            Remove Users
+          </Button>
+        </Link>
+
+        <Link href="/admin/add_resources">
+          <Button
+            className={classes.menuButton}
+            variant="outlined"
+            color="primary"
+          >
+            Add Resources
+          </Button>
+        </Link>
+
+        <Link href="/admin/edit_resource_schema">
+          <Button
+            className={classes.menuButton}
+            variant="outlined"
+            color="primary"
+          >
+            Edit Resource Skeleton
+          </Button>
+        </Link>
+        
+        <Link href="/resources/usage">
+          <Button
+            className={classes.menuButton}
+            variant="outlined"
+            color="primary"
+          >
+            View Resource Usage
+          </Button>
+        </Link>
+        
       </ol>
     </>
   );

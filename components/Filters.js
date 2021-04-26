@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import filterFactory from "../utils/filterFactory";
 import { useResources } from "../components/ResourcesContext";
+import SwipeableTemporaryDrawer from "../components/SecondaryFilters";
 
 /**
  * Component class that represents filters to filter through resources
@@ -18,11 +19,14 @@ const useStyles = makeStyles((theme) => ({
   },
   filterButton: {
     margin: "0.5rem",
+    float: "left",
   },
 }));
 
+
 export default function Filters({ setFiltersState }) {
   const resContext = useResources();
+
 
   //default values for filters are all filters empty
   //as long as all filters are of type SELECT
@@ -45,7 +49,7 @@ export default function Filters({ setFiltersState }) {
   });
 
   const [filterState, setFilterState] = useState(default_values());
-  const classes = useStyles();
+  
   const handleFetchFiltered = () => {};
 
   /**
@@ -95,6 +99,11 @@ export default function Filters({ setFiltersState }) {
       >
         Reset Filters
       </Button>
+
+      
+      <SwipeableTemporaryDrawer/>
+      
+      
     </form>
   );
 }

@@ -10,6 +10,7 @@ import Filters from "../../components/Filters";
 import { useResources } from "../../components/ResourcesContext";
 import { fetchAllRes } from "../../utils/graphql/graphqlHelper";
 
+
 /**
  * Displays page with resources and filters
  */
@@ -179,6 +180,7 @@ export default function Resources() {
   return (
     <Box>
       <Navbar />
+      
       <Grid
         className={classes.container}
         container
@@ -190,6 +192,7 @@ export default function Resources() {
             <Filters setFiltersState={handleSetFilters} />
           </Grid>
         </Grid>
+        
         <Grid item className={classes.item}>
           <ResourcesComp
             attrs_data={data}
