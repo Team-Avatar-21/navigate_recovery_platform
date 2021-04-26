@@ -55,7 +55,6 @@ function SignIn({ classes }) {
   const [errorSnack, setErrorSnack] = useState({ open: false, message: "" });
   const [awaitingResponse, setAwaitingResponse] = useState(false);
   const handleOpenError = (err) => {
-    console.log("inside handle error");
     setErrorSnack({ open: true, message: err.message });
   };
   const handleCloseError = () => {
@@ -73,7 +72,6 @@ function SignIn({ classes }) {
         router.push("/");
       })
       .catch((err) => {
-        console.log(err);
         setAwaitingResponse(false);
         handleOpenError(err);
       });

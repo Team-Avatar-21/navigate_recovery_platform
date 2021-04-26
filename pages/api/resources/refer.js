@@ -1,5 +1,5 @@
 import * as admin from "firebase-admin";
-import account from "../../../navigate-recovery-platfom-firebase-adminsdk-r5iv4-ea3204fe8f.json";
+import account from "../../../utils/service";
 import fetch from "../../../utils/fetch";
 
 const GET_PEER_ID_BY_EMAIL = (email) => {
@@ -32,7 +32,7 @@ const REFER_PEER = (peer_id, id) => {
 
 export default async (req, res) => {
   const { id, peer_email: email, token } = req.body;
-  console.log(req.body);
+
   fetch(GET_PEER_ID_BY_EMAIL(email), token)
     .then(({ peer }) => {
       if (peer.length == 0) {

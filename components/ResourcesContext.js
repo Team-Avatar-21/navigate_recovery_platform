@@ -4,25 +4,25 @@ const ResourcesContext = createContext();
 function resourcesReducer(state, action) {
   switch (action.type) {
     case "set_filters": {
-      console.log("set filters");
       return { ...state, filters: action.value };
     }
+    case "set_attrs": {
+      return { ...state, attrs: action.value };
+    }
     case "update": {
-      console.log("update");
       const filtered_res = state.resources.filter((res) => {
         return action.value.id != res.id;
       });
       return { ...state, resources: [...filtered_res, action.value] };
     }
     case "set": {
-      console.log("set");
       return { ...state, resources: action.value };
     }
     case "update_filters": {
       const newFilters = [...state.filters];
       const newRes = action.value.new;
       const oldRes = action.value.old;
-      console.log(state);
+
       newFilters.forEach((filter) => {
         const { filter_name } = filter;
         if (newRes[filter_name] != oldRes[filter_name]) {
@@ -47,6 +47,7 @@ function ResourcesProvider({ children }) {
   const [state, dispatch] = useReducer(resourcesReducer, {
     resources: [],
     filters: [],
+    attrs: [],
   });
 
   const value = { state, dispatch };

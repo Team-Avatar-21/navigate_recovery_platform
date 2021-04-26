@@ -1,5 +1,5 @@
 import * as admin from "firebase-admin";
-import account from "../../../navigate-recovery-platfom-firebase-adminsdk-r5iv4-ea3204fe8f.json";
+import account from "../../../utils/service";
 
 // // const private_key = process.env.FIREBASE_PK.replace(/\\n/g, "\n");
 // const serviceAccount = account;
@@ -17,7 +17,6 @@ export default (req, res) => {
     .verifyIdToken(token)
     .then((decodedToken) => {
       if (!decodedToken.admin) {
-        console.log("access denied");
         return res.status(400).json({ error: "access denied" });
       }
 

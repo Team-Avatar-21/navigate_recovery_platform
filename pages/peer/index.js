@@ -1,50 +1,40 @@
-import {
-  Typography,
-  Select,
-  Container,
-  Grid,
-  Button,
-  TextField,
-  FormControl,
-  MenuItem,
-  InputLabel,
-  Box,
-} from "@material-ui/core";
+import { Grid, Box } from "@material-ui/core";
 import Navbar from "../../components/Navbar";
 import { useAuth } from "../../utils/auth";
 import useSWR from "swr";
 import fetch from "../../utils/fetch";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Link from "next/link";
+import PeerDetailTable from "../../components/PeerDetailTable";
 
 /**
- * Displays page with resources and filters
+ * Displays page with peers
  */
 
 /**
- * GraphQL query to fetch all filters with available options
+ * GraphQL query to fetch all peers
  * TODO: probably will have to rewrite schema to make it more efficient
  */
 const GET_ALL_PEERS = {
   query: `query GET_ALL_PEERS {
-        peer {
-          emergency_name
-          emergency_number
-          first_name
-          last_name
-          nick_name
-          notes
-          peer_email
-          peer_id
-          peer_number
-          resource_id
-        }
-        peer_visit {
-          peer_id
-          visit_ts
-        }
-      }`,
+      peer {
+        emergency_name
+        emergency_number
+        first_name
+        last_name
+        nick_name
+        notes
+        peer_email
+        peer_id
+        peer_number
+        resource_id
+      }
+      peer_visit {
+        peer_id
+        visit_ts
+      }
+    }`,
 };
 
 /**
@@ -58,21 +48,25 @@ const useStyles = makeStyles((theme) => ({
   selectEmpty: {
     marginTop: theme.spacing(2),
   },
+  layout: {
+    margin: "10px",
+  },
 }));
 
 export default function Resources() {
   const classes = useStyles();
   const auth = useAuth();
   const [peers, setPeers] = useState({});
-
+  const token = auth?.authState?.tokenResult?.token;
   /**
    * Method that fetches all filter values from the DB
    * also sets attributes based of the filters
    * @param  {...any} args not sure what this is here for, just keep it for now
    * @returns {Object} response object from GraphQL endpoint
    */
-  const getData = async (...args) => {
-    await fetch(GET_ALL_PEERS, auth.authState.tokenResult.token)
+
+  const getData = async (token) => {
+    await fetch(GET_ALL_PEERS, token)
       .then((data) => {
         setPeers(data.peer);
         console.info(data);
@@ -82,14 +76,14 @@ export default function Resources() {
       });
   };
 
-  const { data, error } = useSWR(GET_ALL_PEERS, getData);
+  const { data, error } = useSWR(token, getData);
 
   if (!auth.user) {
     return "access deined";
   }
 
   return (
-    <Box>
+    <Box className={classes.layout}>
       <Navbar />
       <Grid container justify="center" direction="column" spacing={4}>
         <ol>
@@ -97,42 +91,15 @@ export default function Resources() {
             <Link href="/peer/create_peer">Create New Profile</Link>
           </li>
         </ol>
-        <table border="1">
-          <thead class="spaceUnder">
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Nick Name</th>
-            <th>Phone Number</th>
-            <th>Email</th>
-            <th>Emergency Contact</th>
-            <th>Notes</th>
-          </thead>
-          <tbody>
-            {(() => {
-              const peerRows = [];
+        {(() => {
+          const peerRows = [];
 
-              for (let i = 0; i < peers.length; i++) {
-                peerRows.push(
-                  <tr align="center" class="spaceUnder">
-                    <td>{peers[i].first_name}</td>
-                    <td>{peers[i].last_name}</td>
-                    <td>{peers[i].nick_name}</td>
-                    <td>{peers[i].peer_number}</td>
-                    <td>{peers[i].peer_email}</td>
-                    <td>
-                      {peers[i].emergency_name +
-                        ": " +
-                        peers[i].emergency_number}
-                    </td>
-                    <td>{peers[i].notes}</td>
-                  </tr>
-                );
-              }
+          for (let i = 0; i < peers.length; i++) {
+            peerRows.push(<PeerDetailTable peer={peers[i]} />);
+          }
 
-              return peerRows;
-            })()}
-          </tbody>
-        </table>
+          return peerRows;
+        })()}
       </Grid>
     </Box>
   );

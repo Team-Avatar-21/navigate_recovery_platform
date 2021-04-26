@@ -39,8 +39,7 @@ const ADD_PEER = (peer) => {
 
 export default function AddPeer() {
   const auth = useAuth();
-
-  const admin = auth?.authState?.tokenResult?.claims?.admin;
+  const coach = auth?.authState?.tokenResult?.claims?.coach || auth?.authState?.tokenResult?.claims?.admin;
   const [successMessage, setSuccessMessage] = useState(false);
   const [awaitingResponse, setAwaitingResponse] = useState(false);
   const [errorSnack, setErrorSnack] = useState({ open: false, message: "" });
@@ -52,7 +51,6 @@ export default function AddPeer() {
   const methods = useForm();
   const { register, handleSubmit, reset } = methods;
   const showSuccessMessage = (data) => {
-    console.log("inside success");
     setSuccessSnack({ open: true, message: data.message });
   };
   const handleCloseSuccess = () => {
@@ -84,7 +82,7 @@ export default function AddPeer() {
       });
   };
 
-  if (!admin) {
+  if (!coach) {
     return <>Access Denied</>;
   }
 

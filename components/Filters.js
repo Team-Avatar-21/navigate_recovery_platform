@@ -1,8 +1,4 @@
-import {
-  Grid,
-  FormControl,
-  Button,
-} from "@material-ui/core";
+import { Grid, FormControl, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -27,42 +23,27 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-  
 
-export default function Filters({ data, setFiltersState }) {
-  const classes = useStyles();
-  //this finds which filters are important
+export default function Filters({ setFiltersState }) {
   const resContext = useResources();
-  const non_important = []
-  const important = []
 
-  const findImportant = (filters) =>{
-    resContext.state.filters.map((filter_data)=>{
-      if (filter_data.important){
-        return important.push(filter_data)
-      }
-      return non_important.push(filter_data)
-    });
-    return[important,non-important];
-  };
 
   //default values for filters are all filters empty
   //as long as all filters are of type SELECT
   const default_values = () => {
     const def_vals = {};
-    data?.forEach((attr) => {
+    resContext.state.attrs?.forEach((attr) => {
       if (attr.filter_type === "select")
         def_vals[attr.filter_name] = { name: "None", value: "" };
       else {
         def_vals[attr.filter_name] = "";
       }
     });
-    console.log(def_vals);
+
     return def_vals;
   };
   const defaultValues = default_values();
-  console.log(findImportant);
-  // console.log(resContext);
+
   const { register, handleSubmit, watch, control, reset, getValues } = useForm({
     defaultValues,
   });
@@ -77,7 +58,6 @@ export default function Filters({ data, setFiltersState }) {
    * @param {Object} data of the current form state
    */
   const onSubmit = (data) => {
-    console.log(data);
     setFiltersState(data);
   };
 
@@ -88,7 +68,7 @@ export default function Filters({ data, setFiltersState }) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Grid container spacing={2} flexwrap>
+      <Grid container spacing={2}>
         {resContext.state.filters.map((filter_data, idx) => {
           const filter = filterFactory(filter_data, control);
           const { filter_name, filter_human_name } = filter_data;

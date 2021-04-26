@@ -1,17 +1,12 @@
 import {
-  Grid,
   Select,
   MenuItem,
-  FormControl,
   TextField,
   InputLabel,
-  Input,
-  Button,
   Checkbox,
   FormControlLabel,
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
-import { makeStyles } from "@material-ui/core/styles";
 import { Controller } from "react-hook-form";
 
 const filterFactory = (filter_data, control) => {
@@ -88,6 +83,10 @@ const makeBooleanSelect = (options, name, human_name, control) => {
                     N/A
                   </MenuItem>
                 );
+              }
+
+              if (option.value == "null") {
+                return;
               }
               return (
                 <MenuItem name={name} value={option.name} key={idx}>

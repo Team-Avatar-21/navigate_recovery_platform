@@ -1,34 +1,23 @@
 import {
   Grid,
-  Box,
-  CircularProgress,
   Typography,
   FormControl,
   Button,
-  Card,
   TextField,
-  Select,
-  MenuItem,
   Checkbox,
 } from "@material-ui/core";
 import StyledPaper from "../../components/StyledPaper";
 import Navbar from "../../components/Navbar";
 import { useAuth } from "../../utils/auth";
 import useSWR from "swr";
-import fetch from "../../utils/fetch";
-import { useEffect, useState } from "react";
+
+import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import ResourcesComp from "../../components/ResourcesComp";
-import Filters from "../../components/Filters";
-import { useResources } from "../../components/ResourcesContext";
+
 import AddResourceAttrModal from "../../components/AddResourceAttrModal";
-import {
-  fetchAllRes,
-  fetchAllAttrs,
-  GET_ALL_ATTRS,
-} from "../../utils/graphql/graphqlHelper";
+import { fetchAllAttrs } from "../../utils/graphql/graphqlHelper";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
-import { ContactsOutlined } from "@material-ui/icons";
+
 import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
@@ -85,10 +74,7 @@ export default function EditResourceSchema() {
   const onSubmit = (data) => {
     axios
       .put("/api/resources/", { attributes: data.attributes, token })
-      .then((res) => {
-        console.log("successfully updated");
-        console.log(res);
-      })
+      .then((res) => {})
       .catch((err) => {
         console.log(err);
       });
@@ -187,7 +173,6 @@ export default function EditResourceSchema() {
         data: { id: filter.id, token, filter_name: filter.filter_name },
       })
       .then((res) => {
-        console.log(res);
         remove(idx);
       })
       .catch((err) => {

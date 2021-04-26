@@ -79,7 +79,7 @@ const REMOVE_RESOURCE = (orgName) => {
   return mutation;
 };
 
-export default function AddResourceAttrModal({
+export default function EditResourceModal({
   resource,
   open,
   handleClose,
@@ -107,7 +107,6 @@ export default function AddResourceAttrModal({
   }
   const onSubmit = (data) => {
     setLoading(true);
-    console.log(data);
     const edited_data = data;
     fetch(
       UPDATE_RESOURCES(data, attrs, resource.id),
@@ -127,8 +126,8 @@ export default function AddResourceAttrModal({
         setTimeout(() => setSuccessSnack({ open: false, message: "" }), 6000);
       })
       .catch((err) => {
-        console.log(err);
         setLoading(false);
+        console.log(err);
       });
   };
 

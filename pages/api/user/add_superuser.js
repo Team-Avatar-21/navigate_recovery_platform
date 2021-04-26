@@ -1,5 +1,5 @@
 const admin = require("firebase-admin");
-const account = require("../../../navigate-recovery-platfom-firebase-adminsdk-r5iv4-ea3204fe8f.json");
+import account from "../../../utils/service";
 // // const private_key = process.env.FIREBASE_PK.replace(/\\n/g, "\n");
 // const serviceAccount = account;
 
@@ -34,7 +34,6 @@ export default (req, res) => {
         peer: true,
       };
       await admin.auth().setCustomUserClaims(uid, customClaims);
-      // console.log(claimsReturn);/
       let updatedRecord = await admin.auth().getUserByEmail(email);
       res.send(updatedRecord);
     })
