@@ -23,10 +23,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 export default function Filters({ setFiltersState }) {
   const resContext = useResources();
-
+  const classes = useStyles();
 
   //default values for filters are all filters empty
   //as long as all filters are of type SELECT
@@ -49,7 +48,7 @@ export default function Filters({ setFiltersState }) {
   });
 
   const [filterState, setFilterState] = useState(default_values());
-  
+
   const handleFetchFiltered = () => {};
 
   /**
@@ -100,10 +99,7 @@ export default function Filters({ setFiltersState }) {
         Reset Filters
       </Button>
 
-      
-      <SwipeableTemporaryDrawer/>
-      
-      
+      {/* <SwipeableTemporaryDrawer /> */}
     </form>
   );
 }
