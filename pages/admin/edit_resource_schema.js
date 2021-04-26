@@ -135,7 +135,7 @@ export default function EditResourceSchema() {
               />
               <label>Important Filter</label>
               <Controller
-                name={`attributes[${idx}]important`}
+                name={`attributes[${idx}].important`}
                 control={control}
                 defaultValue={filter.important}
                 render={(props) => (
@@ -146,6 +146,16 @@ export default function EditResourceSchema() {
                 )}
               />
             </span>
+            <Controller
+              name={`attributes[${idx}].filter_name`}
+              defaultValue={filter.filter_name}
+              control={control}
+            />
+            <Controller
+              name={`attributes[${idx}].id`}
+              defaultValue={filter.id}
+              control={control}
+            />
           </FormControl>
           <FormControl margin="dense"></FormControl>
           <Button onClick={() => handleDelete(filter, idx)}>Delete</Button>
@@ -159,7 +169,9 @@ export default function EditResourceSchema() {
 
   const handleDelete = (filter, idx) => {
     axios
-      .delete("/api/resources", { data: { id: filter.id, token } })
+      .delete("/api/resources", {
+        data: { id: filter.id, token, filter_name: filter.filter_name },
+      })
       .then((res) => {
         remove(idx);
       })
@@ -210,7 +222,11 @@ export default function EditResourceSchema() {
                 </FormControl>
               </Grid>
             </form>
-            <AddResourceAttrModal open={open} handleClose={handleClose} />
+            <AddResourceAttrModal
+              open={open}
+              append={append}
+              handleClose={handleClose}
+            />
           </StyledPaper>
         </Grid>
       </Grid>
