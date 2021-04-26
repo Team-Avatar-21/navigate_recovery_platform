@@ -51,6 +51,7 @@ export default function Usage() {
     const { start, end } = data;
     updateFilteredResourceUsage(start, end);
   };
+
   const handleThisMonth = () => {
     const today = new Date();
     const thisMonth = today.getMonth() + 1;
@@ -177,10 +178,8 @@ export default function Usage() {
           </form>
         </Grid>
         <Grid item>{buildFilteredResUsage(filteredResourceUsage)}</Grid>
-        {/*
-
-        This code would show all of the resource usage for all time with timestamps
-
+        {/* This code would show all of the resource usage for all time with
+        timestamps
         {resourceUsage.map((resource, idx) => {
           const date = new Date(resource.visit_ts);
           const local_date = date.toLocaleDateString("en-US");

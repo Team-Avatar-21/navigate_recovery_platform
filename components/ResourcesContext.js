@@ -6,6 +6,9 @@ function resourcesReducer(state, action) {
     case "set_filters": {
       return { ...state, filters: action.value };
     }
+    case "set_attrs": {
+      return { ...state, attrs: action.value };
+    }
     case "update": {
       const filtered_res = state.resources.filter((res) => {
         return action.value.id != res.id;
@@ -44,6 +47,7 @@ function ResourcesProvider({ children }) {
   const [state, dispatch] = useReducer(resourcesReducer, {
     resources: [],
     filters: [],
+    attrs: [],
   });
 
   const value = { state, dispatch };

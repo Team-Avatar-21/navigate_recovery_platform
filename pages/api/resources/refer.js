@@ -1,5 +1,5 @@
 import * as admin from "firebase-admin";
-import account from "../../../navigate-recovery-platfom-firebase-adminsdk-r5iv4-ea3204fe8f.json";
+import account from "../../../utils/service";
 import fetch from "../../../utils/fetch";
 
 const GET_PEER_ID_BY_EMAIL = (email) => {

@@ -21,13 +21,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Filters({ data, setFiltersState }) {
+export default function Filters({ setFiltersState }) {
   const resContext = useResources();
+
   //default values for filters are all filters empty
   //as long as all filters are of type SELECT
   const default_values = () => {
     const def_vals = {};
-    data?.forEach((attr) => {
+    resContext.state.attrs?.forEach((attr) => {
       if (attr.filter_type === "select")
         def_vals[attr.filter_name] = { name: "None", value: "" };
       else {
