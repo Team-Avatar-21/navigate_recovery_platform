@@ -15,11 +15,11 @@ import {
   InputLabel,
 } from "@material-ui/core";
 import { Alert, AlertTitle } from "@material-ui/lab";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, appendErrors, useWatch } from "react-hook-form";
 import fetch from "../utils/fetch";
 import { useAuth } from "../utils/auth";
 import makeField from "../utils/fieldFactory";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useResources } from "./ResourcesContext";
 import { ErrorMessage } from "@hookform/error-message";
 import axios from "axios";
@@ -84,7 +84,7 @@ const REMOVE_RESOURCE = (orgName) => {
   return mutation;
 };
 
-export default function AddResourceAttrModal({ open, handleClose }) {
+export default function AddResourceAttrModal({ open, handleClose, append }) {
   const auth = useAuth();
   const token = auth.authState.tokenResult.token;
   const [loading, setLoading] = useState(false);
@@ -93,15 +93,19 @@ export default function AddResourceAttrModal({ open, handleClose }) {
     open: false,
     message: "",
   });
+
   const {
     control,
     formState: { errors },
     handleSubmit,
+    reset,
   } = useForm();
 
+  const [filterType, setFilterType] = useState("select");
   if (!open) {
     return <></>;
   }
+
   const onSubmit = async (data) => {
     setLoading(true);
     axios
@@ -110,8 +114,13 @@ export default function AddResourceAttrModal({ open, handleClose }) {
         token,
       })
       .then((res) => {
+        res?.data?.insert_filters_new?.returning[0]
+          ? append(res.data.insert_filters_new.returning[0])
+          : "";
         showSuccessMessage({ message: "Attribute Successfull Added" });
         setLoading(false);
+        reset();
+        setFilterType("select");
       })
       .catch((err) => {
         handleOpenError(err.response.data[0]);
@@ -223,30 +232,21 @@ export default function AddResourceAttrModal({ open, handleClose }) {
               control={control}
               defaultValue={"select"}
               rules={{ required: true }}
-              render={(props) => (
-                <Select {...props}>
-                  <MenuItem value={"select"}>Select</MenuItem>
-                  <MenuItem value={"checkbox"}>Checkbox</MenuItem>
-                  <MenuItem value={"boolean"}>Yes/No</MenuItem>
-                </Select>
-              )}
-              // =======
-              //               render={({ onChange, ...props }) => {
-              //                 return (
-              //                   <Select
-              //                     onChange={(e) => {
-              //                       setFilterType(e.target.value);
-              //                       onChange(e);
-              //                     }}
-              //                     {...props}
-              //                   >
-              //                     <MenuItem value={"select"}>Select</MenuItem>
-              //                     <MenuItem value={"checkbox"}>Checkbox</MenuItem>
-              //                     <MenuItem value={"boolean"}>Yes/No</MenuItem>
-              //                   </Select>
-              //                 );
-              //               }}
-              // >>>>>>> 76aadcb71f857ada0e1b47c4615503938206eab4
+              render={({ onChange, ...props }) => {
+                return (
+                  <Select
+                    onChange={(e) => {
+                      setFilterType(e.target.value);
+                      onChange(e);
+                    }}
+                    {...props}
+                  >
+                    <MenuItem value={"select"}>Select</MenuItem>
+                    <MenuItem value={"checkbox"}>Checkbox</MenuItem>
+                    <MenuItem value={"boolean"}>Yes/No</MenuItem>
+                  </Select>
+                );
+              }}
             />
           </FormControl>
           <FormControl margin="dense">
@@ -298,26 +298,7 @@ export default function AddResourceAttrModal({ open, handleClose }) {
             </section>
           </FormControl>
           <FormControl margin="dense" fullWidth>
-            <Controller
-              name={"default_val"}
-              control={control}
-              defaultValue={""}
-              rules={{
-                required: {
-                  value: true,
-                  message: "Default value is required",
-                },
-              }}
-              render={(props) => (
-                <TextField
-                  {...props}
-                  required
-                  label={"Default Value"}
-                  margin="dense"
-                  placeholder="default value"
-                />
-              )}
-            />
+            {buildDefaultBasedOnFilterType(filterType)}
           </FormControl>
         </DialogContent>
         <DialogActions>

@@ -138,6 +138,7 @@ export default async (req, res) => {
           type: "run_sql",
           args: {
             sql: DROP_COLUMN(filter_name),
+            cascade: true,
           },
         },
         {
@@ -150,15 +151,41 @@ export default async (req, res) => {
       .then((result) => {
         return fetch(REMOVE_FILTER(id), token)
           .then((response) => {
-            res.status(200).send("success");
+            axios
+              .post(
+                "https://testing-heroku-docker.herokuapp.com/v1/query",
+
+                {
+                  type: "create_select_permission",
+                  args: {
+                    table: "resources_new",
+                    role: "coach",
+                    permission: {
+                      columns: "*",
+                      filter: {},
+                      allow_aggregations: true,
+                    },
+                  },
+                },
+                {
+                  headers: {
+                    Authorization: "Bearer " + token,
+                    "content-type": "application/json",
+                  },
+                }
+              )
+              .then((result) => {
+                return res.status(200).send("success");
+              });
           })
           .catch((err) => {
             console.log(err);
-            res.status(400).json(err);
+            return res.status(400).json(err);
           });
       })
       .catch((err) => {
-        res.status(400).json(err);
+        console.log(err);
+        return res.status(400).json(err);
       });
   }
   if (req.method == "PUT") {
