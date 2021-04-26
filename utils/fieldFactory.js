@@ -1,19 +1,11 @@
 import {
-  Button,
   TextField,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   InputLabel,
   Select,
   MenuItem,
   FormControl,
 } from "@material-ui/core";
-import { useForm, Controller } from "react-hook-form";
-import fetch from "./fetch";
-import filterFactory from "./filterFactory";
+import { Controller } from "react-hook-form";
 
 export default function makeField(value, attr_data, control) {
   const { type, value: attr_name, name } = attr_data;

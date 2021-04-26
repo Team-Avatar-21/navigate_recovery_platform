@@ -116,7 +116,6 @@ export default function Resources() {
   const getData = async (...args) => {
     const token = auth.authState.tokenResult.token;
     const { filters_new: fs } = await fetch(GET_ALL_FILTERS, token);
-    console.log(fs);
     let attrs = fs.map((filter) => {
       const {
         filter_name: attribute_name,
@@ -130,7 +129,12 @@ export default function Resources() {
       return obj;
     });
     setAttributes(attrs);
+
     let res = await fetchAllRes(attrs, token);
+    resContext.dispatch({
+      type: "set_attrs",
+      value: fs,
+    });
     resContext.dispatch({
       type: "set_filters",
       value: buildFiltersObject(fs, res),
@@ -168,7 +172,6 @@ export default function Resources() {
       </>
     );
   }
-
   const handleSetFilters = (data) => {
     setFiltersState(data);
   };
@@ -184,7 +187,7 @@ export default function Resources() {
       >
         <Grid item container className={classes.item} justify="center">
           <Grid item>
-            <Filters data={data} setFiltersState={handleSetFilters} />
+            <Filters setFiltersState={handleSetFilters} />
           </Grid>
         </Grid>
         <Grid item className={classes.item}>

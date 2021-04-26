@@ -79,7 +79,7 @@ const REMOVE_RESOURCE = (orgName) => {
   return mutation;
 };
 
-export default function AddResourceAttrModal({
+export default function EditResourceModal({
   resource,
   open,
   handleClose,
@@ -127,6 +127,7 @@ export default function AddResourceAttrModal({
       })
       .catch((err) => {
         setLoading(false);
+        console.log(err);
       });
   };
 

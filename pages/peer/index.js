@@ -57,15 +57,16 @@ export default function Resources() {
   const classes = useStyles();
   const auth = useAuth();
   const [peers, setPeers] = useState({});
-
+  const token = auth?.authState?.tokenResult?.token;
   /**
    * Method that fetches all filter values from the DB
    * also sets attributes based of the filters
    * @param  {...any} args not sure what this is here for, just keep it for now
    * @returns {Object} response object from GraphQL endpoint
    */
-  const getData = async (...args) => {
-    await fetch(GET_ALL_PEERS, auth.authState.tokenResult.token)
+
+  const getData = async (token) => {
+    await fetch(GET_ALL_PEERS, token)
       .then((data) => {
         setPeers(data.peer);
         console.info(data);
@@ -75,7 +76,7 @@ export default function Resources() {
       });
   };
 
-  const { data, error } = useSWR(GET_ALL_PEERS, getData);
+  const { data, error } = useSWR(token, getData);
 
   if (!auth.user) {
     return "access deined";
