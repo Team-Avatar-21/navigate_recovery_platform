@@ -1,30 +1,19 @@
-import {
-  Grid,
-  Typography,
-  Select,
-  Container,
-  Button,
-  TextField,
-  FormControl,
-  MenuItem,
-  InputLabel,
-  Box,
-} from "@material-ui/core";
+import { Grid, Box } from "@material-ui/core";
 import Navbar from "../../components/Navbar";
 import { useAuth } from "../../utils/auth";
 import useSWR from "swr";
 import fetch from "../../utils/fetch";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Link from "next/link";
 import PeerDetailTable from "../../components/PeerDetailTable";
 
 /**
- * Displays page with resources and filters
+ * Displays page with peers
  */
 
 /**
- * GraphQL query to fetch all filters with available options
+ * GraphQL query to fetch all peers
  * TODO: probably will have to rewrite schema to make it more efficient
  */
 const GET_ALL_PEERS = {
@@ -49,8 +38,8 @@ const GET_ALL_PEERS = {
 };
 
 /**
-* Styling classes for Material UI components
-*/
+ * Styling classes for Material UI components
+ */
 const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1),
@@ -76,14 +65,14 @@ export default function Resources() {
    * @returns {Object} response object from GraphQL endpoint
    */
   const getData = async (...args) => {
-    await fetch(GET_ALL_PEERS, auth.authState.tokenResult.token) 
-    .then((data) => {
-        setPeers(data.peer)
+    await fetch(GET_ALL_PEERS, auth.authState.tokenResult.token)
+      .then((data) => {
+        setPeers(data.peer);
         console.info(data);
-    })
-    .catch((err) => {
-        console.error(err)
-    })
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   const { data, error } = useSWR(GET_ALL_PEERS, getData);
@@ -96,20 +85,20 @@ export default function Resources() {
     <Box className={classes.layout}>
       <Navbar />
       <Grid container justify="center" direction="column" spacing={4}>
-          <ol>
-              <li>
-                  <Link href="/peer/create_peer">Create New Profile</Link>
-              </li>
-          </ol>
-          {(() => {
-              const peerRows = [];
+        <ol>
+          <li>
+            <Link href="/peer/create_peer">Create New Profile</Link>
+          </li>
+        </ol>
+        {(() => {
+          const peerRows = [];
 
-              for (let i = 0; i < peers.length; i++) {
-                peerRows.push(<PeerDetailTable peer={peers[i]}/>);
-              }
+          for (let i = 0; i < peers.length; i++) {
+            peerRows.push(<PeerDetailTable peer={peers[i]} />);
+          }
 
-              return peerRows;
-            })()}
+          return peerRows;
+        })()}
       </Grid>
     </Box>
   );
