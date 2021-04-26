@@ -128,6 +128,7 @@ export default function ResourcesComp({
       names_obj[key]["value"] = key;
       names_obj[key]["name"] = value;
       names_obj[key]["type"] = obj.filter_type;
+      names_obj[key]["important_attr"] = obj.important_attr;
     });
     return names_obj;
   };

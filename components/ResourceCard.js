@@ -43,12 +43,13 @@ export default function ResourceCard({
    */
   const cardData = Object.keys(attrs).map((key) => {
     const attribute_name = attrs[key]["name"];
-
-    return (
-      <Typography key={key}>
-        {attribute_name}: {String(resource[key])}
-      </Typography>
-    );
+    if (attrs[key]["important_attr"]) {
+      return (
+        <Typography key={key}>
+          {attribute_name}: {String(resource[key])}
+        </Typography>
+      );
+    }
   });
   return (
     <Grid container className={classes.gridContainer}>
