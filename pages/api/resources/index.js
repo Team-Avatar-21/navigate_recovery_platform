@@ -1,5 +1,5 @@
 const admin = require("firebase-admin");
-const account = require("../../../navigate-recovery-platfom-firebase-adminsdk-r5iv4-ea3204fe8f.json");
+import account from "../../../utils/service";
 import axios from "axios";
 import fetch from "../../../utils/fetch";
 // // const private_key = process.env.FIREBASE_PK.replace(/\\n/g, "\n");
