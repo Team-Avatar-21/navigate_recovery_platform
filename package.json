@@ -1,6 +1,6 @@
 {
   "name": "navigate_recovery_platform",
-  "description": "* **Oleg Bazylnikov** :turtle::man_farmer::latin_cross:: \t* Lead Programmer \t* Core Architecture",
+  "description": "System for internal use at Navigate Recovery. Meant to increase team productivity.",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -43,7 +43,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "AGPL 3.0v",
   "bugs": {
     "url": "https://github.com/Team-Avatar-21/navigate_recovery_platform/issues"
   },
